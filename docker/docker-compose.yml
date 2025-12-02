@@ -1,0 +1,64 @@
+version: "3.9"
+
+services:
+  # Streamlit Application
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: streamlit-turbo-pro
+    ports:
+      - "8501:8501"
+    volumes:
+      - ../data:/app/data
+      - ../.streamlit:/app/.streamlit
+    environment:
+      - DATABASE_URL=postgresql://streamlit:streamlit@postgres:5432/streamlit_pro
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - streamlit-network
+    restart: unless-stopped
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:16-alpine
+    container_name: streamlit-postgres
+    environment:
+      POSTGRES_DB: streamlit_pro
+      POSTGRES_USER: streamlit
+      POSTGRES_PASSWORD: streamlit
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U streamlit"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - streamlit-network
+    restart: unless-stopped
+
+  # Adminer - Database management UI
+  adminer:
+    image: adminer:latest
+    container_name: streamlit-adminer
+    ports:
+      - "8080:8080"
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    depends_on:
+      - postgres
+    networks:
+      - streamlit-network
+    restart: unless-stopped
+
+volumes:
+  postgres-data:
+
+networks:
+  streamlit-network:
+    driver: bridge

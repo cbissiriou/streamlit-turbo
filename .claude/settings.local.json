@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(tree:*)",
+      "Bash(git -C /home/gael/Documents/Github/StreamlitTurbo log --all --oneline --graph -20)",
+      "Bash(git -C /home/gael/Documents/Github/StreamlitTurbo show 3b002da --stat)",
+      "Bash(git -C /home/gael/Documents/Github/StreamlitTurbo show 3b002da)",
+      "Bash(git -C /home/gael/Documents/Github/StreamlitTurbo show 47e1ae1 --stat)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:docs.streamlit.io)",
+      "Bash(uv pip compile:*)",
+      "Bash(uv sync:*)",
+      "Bash(uv run pytest:*)"
+    ],
+    "deny": []
+  }
+}
