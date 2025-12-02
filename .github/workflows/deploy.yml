@@ -1,0 +1,41 @@
+name: Deploy to Streamlit Cloud
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+
+      - name: Generate requirements.txt for Streamlit Cloud
+        run: |
+          uv pip compile pyproject.toml -o requirements.txt
+
+      - name: Commit requirements.txt if changed
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add requirements.txt
+          git diff --quiet && git diff --staged --quiet || git commit -m "chore: update requirements.txt for deployment"
+          git push
+        continue-on-error: true
+
+      - name: Deployment info
+        run: |
+          echo "✅ requirements.txt generated and committed"
+          echo "🚀 Streamlit Cloud will auto-deploy from main branch"
+          echo "📝 Make sure your Streamlit Cloud app is configured to use main.py"
+          echo "🔐 Configure secrets in Streamlit Cloud dashboard"
