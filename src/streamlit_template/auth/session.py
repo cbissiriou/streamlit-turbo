@@ -2,9 +2,10 @@
 Gestion des sessions et authentification utilisateur
 """
 
-import streamlit as st
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Any
+
+import streamlit as st
 
 
 def is_authenticated() -> bool:
@@ -21,7 +22,7 @@ def is_authenticated() -> bool:
         return False
 
 
-def get_current_user() -> Optional[Dict[str, Any]]:
+def get_current_user() -> dict[str, Any] | None:
     """
     Récupère les informations de l'utilisateur connecté
 

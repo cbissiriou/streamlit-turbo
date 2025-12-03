@@ -3,9 +3,10 @@ Page d'accueil - StreamlitTurbo PRO
 """
 
 import streamlit as st
-from streamlit_template.auth import is_authenticated, get_current_user
+
+from streamlit_template.auth import get_current_user, is_authenticated
+from streamlit_template.components import render_footer, render_header
 from streamlit_template.monitoring import track_page_view
-from streamlit_template.components import render_header, render_footer
 
 # Track page view
 track_page_view("home")

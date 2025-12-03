@@ -2,9 +2,10 @@
 Configuration pytest et fixtures communes
 """
 
-import pytest
 import sys
 from pathlib import Path
+
+import pytest
 
 # Ajouter src au path pour les imports
 sys.path.insert(0, str(Path(__file__).parent.parent / "src"))
@@ -73,7 +74,6 @@ def mock_streamlit_secrets(monkeypatch):
             return key in self._data
 
     # Mock streamlit.secrets
-    import streamlit as st
 
     mock_secrets = MockSecrets()
     monkeypatch.setattr("streamlit.secrets", mock_secrets)

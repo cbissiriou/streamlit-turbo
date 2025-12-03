@@ -2,10 +2,10 @@
 Tests unitaires pour le module monitoring
 """
 
-import pytest
-from unittest.mock import patch, Mock
+from unittest.mock import Mock, patch
+
+from streamlit_template.monitoring.analytics import track_action, track_page_view
 from streamlit_template.monitoring.logger import get_logger, log_event
-from streamlit_template.monitoring.analytics import track_page_view, track_action
 
 
 class TestLogger:

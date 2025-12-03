@@ -2,11 +2,13 @@
 Décorateurs utilitaires pour l'application
 """
 
-import time
-import streamlit as st
-from functools import wraps
-from typing import Any, Callable, Optional
 import logging
+import time
+from collections.abc import Callable
+from functools import wraps
+from typing import Any
+
+import streamlit as st
 
 
 def measure_time(func: Callable = None, *, display: bool = False) -> Callable:
@@ -22,17 +24,17 @@ def measure_time(func: Callable = None, *, display: bool = False) -> Callable:
             start_time = time.time()
             result = f(*args, **kwargs)
             execution_time = time.time() - start_time
-            
+
             if display:
                 st.caption(f"⏱️ Temps d'exécution: {execution_time:.2f}s")
-            
+
             # Stocke le temps dans les métriques de session si disponible
             if hasattr(st.session_state, 'execution_times'):
                 st.session_state.execution_times[f.__name__] = execution_time
-            
+
             return result
         return wrapper
-    
+
     if func is None:
         return decorator
     else:
@@ -66,10 +68,10 @@ def handle_errors(default_return: Any = None, show_error: bool = True):
             except Exception as e:
                 if show_error:
                     st.error(f"Erreur dans {func.__name__}: {str(e)}")
-                
+
                 # Log l'erreur
                 logging.error(f"Erreur dans {func.__name__}: {str(e)}", exc_info=True)
-                
+
                 # Stocke l'erreur dans l'état de session
                 if 'last_errors' not in st.session_state:
                     st.session_state.last_errors = []
@@ -78,7 +80,7 @@ def handle_errors(default_return: Any = None, show_error: bool = True):
                     'error': str(e),
                     'timestamp': time.time()
                 })
-                
+
                 return default_return
         return wrapper
     return decorator
@@ -112,20 +114,20 @@ def cache_result(ttl: int = 3600, key_prefix: str = ""):
         def wrapper(*args, **kwargs):
             # Génère une clé unique basée sur les arguments
             cache_key = f"{key_prefix}_{func.__name__}_{hash(str(args) + str(kwargs))}"
-            
+
             # Vérifie si le résultat est en cache
             if cache_key in st.session_state:
                 cached_data = st.session_state[cache_key]
                 if time.time() - cached_data['timestamp'] < ttl:
                     return cached_data['result']
-            
+
             # Exécute la fonction et met en cache
             result = func(*args, **kwargs)
             st.session_state[cache_key] = {
                 'result': result,
                 'timestamp': time.time()
             }
-            
+
             return result
         return wrapper
     return decorator
@@ -137,19 +139,19 @@ def log_function_call(level: str = "INFO"):
         @wraps(func)
         def wrapper(*args, **kwargs):
             logger = logging.getLogger(func.__module__)
-            
+
             # Log avant l'exécution
-            logger.log(getattr(logging, level.upper()), 
+            logger.log(getattr(logging, level.upper()),
                       f"Calling {func.__name__} with args={args}, kwargs={kwargs}")
-            
+
             start_time = time.time()
             result = func(*args, **kwargs)
             execution_time = time.time() - start_time
-            
+
             # Log après l'exécution
             logger.log(getattr(logging, level.upper()),
                       f"Completed {func.__name__} in {execution_time:.2f}s")
-            
+
             return result
         return wrapper
     return decorator
@@ -169,18 +171,18 @@ def validate_inputs(**validators):
             import inspect
             sig = inspect.signature(func)
             param_names = list(sig.parameters.keys())
-            
+
             # Combine args et kwargs
-            all_args = dict(zip(param_names, args))
+            all_args = dict(zip(param_names, args, strict=False))
             all_args.update(kwargs)
-            
+
             # Valide chaque argument
             for param_name, validator in validators.items():
                 if param_name in all_args:
                     value = all_args[param_name]
                     if not validator(value):
                         raise ValueError(f"Validation failed for parameter '{param_name}' with value {value}")
-            
+
             return func(*args, **kwargs)
         return wrapper
     return decorator
@@ -197,7 +199,7 @@ def streamlit_fragment(func: Callable = None):
         def wrapper(*args, **kwargs):
             return f(*args, **kwargs)
         return wrapper
-    
+
     if func is None:
         return decorator
     else:
@@ -216,7 +218,7 @@ def retry(max_attempts: int = 3, delay: float = 1.0):
         @wraps(func)
         def wrapper(*args, **kwargs):
             last_exception = None
-            
+
             for attempt in range(max_attempts):
                 try:
                     return func(*args, **kwargs)
@@ -227,7 +229,7 @@ def retry(max_attempts: int = 3, delay: float = 1.0):
                         continue
                     else:
                         raise last_exception
-            
+
             return None  # Ne devrait jamais arriver
         return wrapper
     return decorator

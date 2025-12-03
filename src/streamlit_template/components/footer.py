@@ -2,8 +2,9 @@
 Composant Footer pour l'application Streamlit
 """
 
-import streamlit as st
 from datetime import datetime
+
+import streamlit as st
 
 
 def render_footer():
@@ -21,19 +22,19 @@ def render_footer():
         margin-top: 2rem;
     ">
     """, unsafe_allow_html=True)
-    
+
     col1, col2, col3 = st.columns([1, 2, 1])
-    
+
     with col1:
         st.markdown("🚀 **Streamlit Template**")
-    
+
     with col2:
         current_year = datetime.now().year
         st.markdown(f"© {current_year} - Développé avec Streamlit")
-    
+
     with col3:
         st.markdown("Version MVP 0.1.0")
-    
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 
@@ -42,8 +43,8 @@ def render_footer_minimal():
     Version minimaliste du footer
     """
     st.markdown("---")
-    st.markdown("""
+    st.markdown(f"""
     <div style="text-align: center; color: #666; font-size: 0.7rem; padding: 1rem;">
-        Streamlit Template MVP • © {year}
+        Streamlit Template MVP • © {datetime.now().year}
     </div>
-    """.format(year=datetime.now().year), unsafe_allow_html=True)
+    """, unsafe_allow_html=True)

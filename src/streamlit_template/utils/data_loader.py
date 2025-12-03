@@ -2,13 +2,15 @@
 Utilitaires pour charger les données
 """
 
-import pandas as pd
 from pathlib import Path
+
+import pandas as pd
+
 
 def load_sample_data() -> pd.DataFrame:
     """Charge le dataset d'exemple depuis le fichier CSV"""
     data_path = Path(__file__).parent.parent.parent.parent / "data" / "sample_data.csv"
-    
+
     if data_path.exists():
         return pd.read_csv(data_path)
     else:

@@ -2,10 +2,12 @@
 Configuration et gestion du moteur de base de données
 """
 
-import streamlit as st
-from sqlmodel import create_engine, Session, SQLModel
-from typing import Generator, Optional
+from collections.abc import Generator
 from pathlib import Path
+
+import streamlit as st
+from sqlalchemy import Engine
+from sqlmodel import Session, SQLModel, create_engine
 
 
 def get_database_url() -> str:
@@ -42,10 +44,10 @@ def get_database_url() -> str:
     return f"sqlite:///{data_dir}/app.db"
 
 
-_engine: Optional[create_engine] = None
+_engine: Engine | None = None
 
 
-def get_engine():
+def get_engine() -> Engine:
     """
     Retourne l'instance du moteur de base de données (singleton)
 

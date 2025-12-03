@@ -4,9 +4,10 @@ Configuration utilisateur et préférences
 """
 
 import streamlit as st
-from streamlit_template.auth import require_auth, get_current_user
-from streamlit_template.monitoring import track_page_view, track_action
-from streamlit_template.components import render_header, render_footer
+
+from streamlit_template.auth import get_current_user, require_auth
+from streamlit_template.components import render_footer, render_header
+from streamlit_template.monitoring import track_action, track_page_view
 
 # Track page view
 track_page_view("settings")
@@ -198,8 +199,8 @@ def render_about_tab():
 
     # Statistiques système
     with st.expander("🔧 Informations système"):
-        import sys
         import platform
+        import sys
 
         col1, col2 = st.columns(2)
 

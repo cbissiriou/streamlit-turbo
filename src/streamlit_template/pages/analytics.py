@@ -3,21 +3,20 @@ Page Analytics - StreamlitTurbo PRO
 Visualisations et analyse de données avec authentification requise
 """
 
+from datetime import datetime
+
 import streamlit as st
-import pandas as pd
-import numpy as np
-from datetime import datetime, timedelta
 
 from streamlit_template.auth import require_auth
-from streamlit_template.monitoring import track_page_view, track_action
-from streamlit_template.components import render_header, render_footer
+from streamlit_template.components import render_footer, render_header
 from streamlit_template.components.charts import (
-    create_line_chart,
     create_bar_chart,
-    create_pie_chart,
+    create_line_chart,
     create_multi_line_chart,
+    create_pie_chart,
     generate_sample_data,
 )
+from streamlit_template.monitoring import track_action, track_page_view
 
 # Track page view
 track_page_view("analytics")

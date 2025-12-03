@@ -3,7 +3,7 @@ Modèles de données SQLModel
 """
 
 from datetime import datetime
-from typing import Optional
+
 from sqlmodel import Field, SQLModel
 
 
@@ -15,15 +15,15 @@ class User(SQLModel, table=True):
 
     __tablename__ = "users"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Identifiants OAuth
     email: str = Field(unique=True, index=True)
     google_sub: str = Field(unique=True, index=True)  # Google unique ID
 
     # Informations profil
-    name: Optional[str] = None
-    picture_url: Optional[str] = None
+    name: str | None = None
+    picture_url: str | None = None
 
     # Rôle et permissions
     role: str = Field(default="user")  # user, admin, etc.
@@ -32,10 +32,10 @@ class User(SQLModel, table=True):
     # Métadonnées
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
-    last_login: Optional[datetime] = None
+    last_login: datetime | None = None
 
     # Préférences utilisateur (JSON)
-    preferences: Optional[str] = None  # Stocké comme JSON string
+    preferences: str | None = None  # Stocké comme JSON string
 
     class Config:
         json_schema_extra = {
@@ -55,20 +55,20 @@ class ActivityLog(SQLModel, table=True):
 
     __tablename__ = "activity_logs"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Utilisateur
-    user_email: Optional[str] = Field(index=True)
+    user_email: str | None = Field(index=True)
 
     # Activité
     action: str = Field(index=True)  # page_view, button_click, etc.
-    page: Optional[str] = None
-    details: Optional[str] = None  # JSON string pour détails additionnels
+    page: str | None = None
+    details: str | None = None  # JSON string pour détails additionnels
 
     # Métadonnées
     timestamp: datetime = Field(default_factory=datetime.now, index=True)
-    ip_address: Optional[str] = None
-    user_agent: Optional[str] = None
+    ip_address: str | None = None
+    user_agent: str | None = None
 
     class Config:
         json_schema_extra = {
@@ -89,13 +89,13 @@ class DataEntry(SQLModel, table=True):
 
     __tablename__ = "data_entries"
 
-    id: Optional[int] = Field(default=None, primary_key=True)
+    id: int | None = Field(default=None, primary_key=True)
 
     # Données
     title: str
-    description: Optional[str] = None
+    description: str | None = None
     value: float = 0.0
-    category: Optional[str] = None
+    category: str | None = None
 
     # Ownership
     owner_email: str = Field(index=True)

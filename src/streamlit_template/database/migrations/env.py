@@ -2,18 +2,19 @@
 Alembic environment configuration
 """
 
-from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool
-from alembic import context
 import sys
+from logging.config import fileConfig
 from pathlib import Path
+
+from alembic import context
+from sqlalchemy import engine_from_config, pool
 
 # Ajouter le dossier src au path
 sys.path.insert(0, str(Path(__file__).parents[4] / "src"))
 
 # Import des modèles pour auto-génération
-from streamlit_template.database.models import SQLModel
 from streamlit_template.database.engine import get_database_url
+from streamlit_template.database.models import SQLModel
 
 # Configuration Alembic
 config = context.config

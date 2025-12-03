@@ -4,9 +4,10 @@ Administration et gestion (réservé aux admins)
 """
 
 import streamlit as st
-from streamlit_template.auth import require_role, get_current_user
-from streamlit_template.monitoring import track_page_view, get_app_stats, get_user_stats
-from streamlit_template.components import render_header, render_footer
+
+from streamlit_template.auth import get_current_user, require_role
+from streamlit_template.components import render_footer, render_header
+from streamlit_template.monitoring import get_app_stats, get_user_stats, track_page_view
 
 # Track page view
 track_page_view("admin")
@@ -90,8 +91,9 @@ def render_stats_tab():
     st.info("Les logs d'activité détaillés seront affichés ici.")
 
     # Exemple de tableau d'activité
-    import pandas as pd
     from datetime import datetime, timedelta
+
+    import pandas as pd
 
     activity_data = pd.DataFrame(
         {
@@ -209,9 +211,8 @@ def render_system_tab():
     """Onglet système"""
     st.markdown("### ⚙️ Informations système")
 
-    import sys
     import platform
-    from pathlib import Path
+    import sys
 
     col1, col2 = st.columns(2)
 

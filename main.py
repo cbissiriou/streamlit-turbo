@@ -17,6 +17,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 import streamlit as st
+
 from streamlit_template.database.engine import init_db
 from streamlit_template.monitoring.logger import get_logger
 

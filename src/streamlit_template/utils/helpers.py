@@ -2,16 +2,16 @@
 Fonctions utilitaires générales
 """
 
-import streamlit as st
-import pandas as pd
-import json
-from typing import Any, Dict, List, Optional, Union
-from datetime import datetime, timedelta
 import base64
-from io import BytesIO
+import json
+from datetime import datetime
+from typing import Any
+
+import pandas as pd
+import streamlit as st
 
 
-def format_number(value: Union[int, float], precision: int = 2, suffix: str = "") -> str:
+def format_number(value: int | float, precision: int = 2, suffix: str = "") -> str:
     """Formate un nombre avec séparateurs et suffixe"""
     if value >= 1e9:
         return f"{value/1e9:.{precision}f}B{suffix}"
@@ -57,11 +57,11 @@ def truncate_text(text: str, max_length: int = 50, suffix: str = "...") -> str:
     return text[:max_length - len(suffix)] + suffix
 
 
-def create_download_link(data: Union[str, bytes, pd.DataFrame], 
-                        filename: str, 
+def create_download_link(data: str | bytes | pd.DataFrame,
+                        filename: str,
                         mime_type: str = "text/plain") -> str:
     """Crée un lien de téléchargement pour des données"""
-    
+
     if isinstance(data, pd.DataFrame):
         if filename.endswith('.csv'):
             data = data.to_csv(index=False)
@@ -69,10 +69,10 @@ def create_download_link(data: Union[str, bytes, pd.DataFrame],
         elif filename.endswith('.json'):
             data = data.to_json(orient='records', indent=2)
             mime_type = "application/json"
-    
+
     if isinstance(data, str):
         data = data.encode()
-    
+
     b64 = base64.b64encode(data).decode()
     href = f'<a href="data:{mime_type};base64,{b64}" download="{filename}">{filename}</a>'
     return href
@@ -94,45 +94,45 @@ def clean_dataframe(df: pd.DataFrame, remove_duplicates: bool = True) -> pd.Data
     """Nettoie un DataFrame (valeurs nulles, doublons, etc.)"""
     # Copie pour ne pas modifier l'original
     cleaned_df = df.copy()
-    
+
     # Supprime les lignes entièrement vides
     cleaned_df = cleaned_df.dropna(how='all')
-    
+
     # Supprime les colonnes entièrement vides
     cleaned_df = cleaned_df.dropna(axis=1, how='all')
-    
+
     # Supprime les doublons si demandé
     if remove_duplicates:
         cleaned_df = cleaned_df.drop_duplicates()
-    
+
     return cleaned_df
 
 
-def get_color_scale(value: float, min_val: float, max_val: float, 
-                   colors: List[str] = None) -> str:
+def get_color_scale(value: float, min_val: float, max_val: float,
+                   colors: list[str] = None) -> str:
     """Retourne une couleur basée sur une échelle de valeurs"""
     if colors is None:
         colors = ["#ff4444", "#ffaa44", "#44ff44"]  # Rouge -> Orange -> Vert
-    
+
     if max_val == min_val:
         return colors[len(colors) // 2]  # Couleur du milieu
-    
+
     # Normalise la valeur entre 0 et 1
     normalized = (value - min_val) / (max_val - min_val)
     normalized = max(0, min(1, normalized))  # Clamp entre 0 et 1
-    
+
     # Trouve l'index de couleur
     color_index = int(normalized * (len(colors) - 1))
     return colors[color_index]
 
 
-def display_metric_card(title: str, value: Any, delta: Optional[float] = None,
+def display_metric_card(title: str, value: Any, delta: float | None = None,
                        format_func: callable = str):
     """Affiche une carte de métrique stylée"""
     formatted_value = format_func(value)
-    
+
     col1, col2 = st.columns([3, 1])
-    
+
     with col1:
         st.metric(
             label=title,
@@ -145,11 +145,11 @@ def create_info_box(title: str, content: str, type: str = "info"):
     """Crée une boîte d'information colorée"""
     icons = {
         "info": "ℹ️",
-        "warning": "⚠️", 
+        "warning": "⚠️",
         "error": "❌",
         "success": "✅"
     }
-    
+
     icon = icons.get(type, "ℹ️")
     st.markdown(f"""
     <div style="
@@ -167,17 +167,17 @@ def create_info_box(title: str, content: str, type: str = "info"):
 
 def sidebar_spacer(height: int = 20):
     """Ajoute un espace vertical dans la sidebar"""
-    st.sidebar.markdown(f'<div style="height: {height}px;"></div>', 
+    st.sidebar.markdown(f'<div style="height: {height}px;"></div>',
                        unsafe_allow_html=True)
 
 
 def main_spacer(height: int = 20):
     """Ajoute un espace vertical dans le contenu principal"""
-    st.markdown(f'<div style="height: {height}px;"></div>', 
+    st.markdown(f'<div style="height: {height}px;"></div>',
                unsafe_allow_html=True)
 
 
-def json_pretty_print(data: Dict[str, Any], max_height: int = 300):
+def json_pretty_print(data: dict[str, Any], max_height: int = 300):
     """Affiche du JSON de manière formatée"""
     json_str = json.dumps(data, indent=2, ensure_ascii=False)
     st.code(json_str, language='json')

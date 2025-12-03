@@ -2,10 +2,11 @@
 Système de logging structuré avec structlog
 """
 
-import structlog
 import logging
 import sys
 from pathlib import Path
+
+import structlog
 
 # Configuration du logging structuré
 structlog.configure(

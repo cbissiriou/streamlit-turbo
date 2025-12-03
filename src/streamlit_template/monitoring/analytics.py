@@ -2,9 +2,11 @@
 Analytics simples pour tracking utilisateur
 """
 
-import streamlit as st
 from datetime import datetime
-from typing import Optional, Dict, Any
+from typing import Any
+
+import streamlit as st
+
 from streamlit_template.auth.session import get_current_user
 from streamlit_template.database.engine import get_session
 from streamlit_template.database.models import ActivityLog
@@ -45,7 +47,7 @@ def track_page_view(page_name: str):
             log_event("analytics_error", error=str(e))
 
 
-def track_action(action: str, details: Optional[Dict[str, Any]] = None, page: Optional[str] = None):
+def track_action(action: str, details: dict[str, Any] | None = None, page: str | None = None):
     """
     Track une action utilisateur
 
@@ -79,7 +81,7 @@ def track_action(action: str, details: Optional[Dict[str, Any]] = None, page: Op
             log_event("analytics_error", error=str(e))
 
 
-def get_user_stats(user_email: str) -> Dict[str, Any]:
+def get_user_stats(user_email: str) -> dict[str, Any]:
     """
     Récupère les statistiques d'un utilisateur
 
@@ -91,7 +93,7 @@ def get_user_stats(user_email: str) -> Dict[str, Any]:
     """
     try:
         with next(get_session()) as session:
-            from sqlmodel import select, func
+            from sqlmodel import func, select
 
             # Nombre total d'actions
             total_actions = session.exec(
@@ -117,7 +119,7 @@ def get_user_stats(user_email: str) -> Dict[str, Any]:
         return {"error": str(e)}
 
 
-def get_app_stats() -> Dict[str, Any]:
+def get_app_stats() -> dict[str, Any]:
     """
     Récupère les statistiques globales de l'application
 
@@ -126,7 +128,8 @@ def get_app_stats() -> Dict[str, Any]:
     """
     try:
         with next(get_session()) as session:
-            from sqlmodel import select, func
+            from sqlmodel import func, select
+
             from streamlit_template.database.models import User
 
             # Nombre d'utilisateurs

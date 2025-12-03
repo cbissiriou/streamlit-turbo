@@ -2,12 +2,12 @@
 Tests unitaires pour le module d'authentification
 """
 
-import pytest
-from unittest.mock import Mock, patch, PropertyMock
+from unittest.mock import Mock, patch
+
 from streamlit_template.auth.session import (
-    is_authenticated,
     get_current_user,
     get_user_role,
+    is_authenticated,
 )
 
 

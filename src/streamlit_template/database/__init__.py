@@ -4,6 +4,6 @@ Support SQLite (dev) et PostgreSQL (prod)
 """
 
 from streamlit_template.database.engine import get_engine, get_session, init_db
-from streamlit_template.database.models import User, ActivityLog
+from streamlit_template.database.models import ActivityLog, User
 
 __all__ = ["get_engine", "get_session", "init_db", "User", "ActivityLog"]

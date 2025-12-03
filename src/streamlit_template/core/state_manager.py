@@ -2,33 +2,34 @@
 Gestionnaire d'état global de l'application
 """
 
-import streamlit as st
-from typing import Any, Dict, Optional
 from dataclasses import dataclass, field
+from typing import Any
+
+import streamlit as st
 
 
 @dataclass
 class AppState:
     """État global de l'application"""
-    
+
     # État utilisateur
-    user_id: Optional[str] = None
-    user_name: Optional[str] = None
+    user_id: str | None = None
+    user_name: str | None = None
     is_authenticated: bool = False
-    
+
     # Navigation
     current_page: str = "Home"
-    previous_page: Optional[str] = None
-    
+    previous_page: str | None = None
+
     # Données
-    data_cache: Dict[str, Any] = field(default_factory=dict)
-    
+    data_cache: dict[str, Any] = field(default_factory=dict)
+
     # UI State
     sidebar_collapsed: bool = False
     theme: str = "auto"
-    
+
     # Erreurs et notifications
-    last_error: Optional[str] = None
+    last_error: str | None = None
     notifications: list = field(default_factory=list)
 
 
@@ -105,7 +106,7 @@ def get_cached_data(key: str, default: Any = None) -> Any:
     return state.data_cache.get(key, default)
 
 
-def clear_cache(key: Optional[str] = None):
+def clear_cache(key: str | None = None):
     """Efface le cache"""
     state = get_state()
     if key:

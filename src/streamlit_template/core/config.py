@@ -4,40 +4,40 @@ Configuration centralisée de l'application
 
 import os
 from dataclasses import dataclass
-from typing import Optional
+
 import streamlit as st
 
 
 @dataclass
 class AppConfig:
     """Configuration de l'application"""
-    
+
     # Informations de base
     app_name: str = "Streamlit Template"
     app_version: str = "MVP 0.1.0"
     app_description: str = "Template Streamlit avec architecture modulaire"
-    
+
     # Configuration Streamlit
     page_title: str = "Streamlit Template"
     page_icon: str = "🚀"
     layout: str = "wide"
     sidebar_state: str = "expanded"
     theme_mode: str = "auto"
-    
+
     # Chemins
     data_dir: str = "data"
     assets_dir: str = "assets"
-    
+
     # Base de données
-    database_url: Optional[str] = None
-    
+    database_url: str | None = None
+
     # Debug et logging
     debug_mode: bool = False
     log_level: str = "INFO"
-    
+
     # Cache
     cache_ttl: int = 3600  # 1 heure
-    
+
     @classmethod
     def from_env(cls) -> "AppConfig":
         """Crée la configuration depuis les variables d'environnement"""

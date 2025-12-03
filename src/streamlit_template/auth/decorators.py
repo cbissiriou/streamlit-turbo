@@ -2,13 +2,15 @@
 Décorateurs pour la gestion de l'authentification et des autorisations
 """
 
-import streamlit as st
+from collections.abc import Callable
 from functools import wraps
-from typing import Callable, List, Optional
-from streamlit_template.auth.session import is_authenticated, get_user_role
+
+import streamlit as st
+
+from streamlit_template.auth.session import get_user_role, is_authenticated
 
 
-def require_auth(func: Optional[Callable] = None, *, redirect_message: str = None):
+def require_auth(func: Callable | None = None, *, redirect_message: str = None):
     """
     Décorateur pour protéger une page/fonction nécessitant une authentification
 
@@ -48,7 +50,7 @@ def require_auth(func: Optional[Callable] = None, *, redirect_message: str = Non
 
 
 def require_role(
-    allowed_roles: List[str],
+    allowed_roles: list[str],
     denied_message: str = "Vous n'avez pas les permissions nécessaires."
 ):
     """

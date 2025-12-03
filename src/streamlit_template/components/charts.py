@@ -2,13 +2,13 @@
 Composants de graphiques réutilisables avec Plotly
 """
 
-import streamlit as st
-import plotly.graph_objects as go
-import plotly.express as px
-import pandas as pd
+from typing import Any
+
 import numpy as np
-from typing import List, Dict, Any, Optional, Tuple
-from datetime import datetime, timedelta
+import pandas as pd
+import plotly.express as px
+import plotly.graph_objects as go
+import streamlit as st
 
 
 def create_line_chart(
@@ -16,7 +16,7 @@ def create_line_chart(
     x: str,
     y: str,
     title: str = "",
-    color: Optional[str] = None,
+    color: str | None = None,
     height: int = 400
 ) -> go.Figure:
     """
@@ -34,7 +34,7 @@ def create_line_chart(
         fig = px.line(data, x=x, y=y, color=color, title=title)
     else:
         fig = px.line(data, x=x, y=y, title=title)
-    
+
     # Styling personnalisé
     fig.update_layout(
         height=height,
@@ -54,19 +54,19 @@ def create_line_chart(
         ),
         yaxis=dict(
             showgrid=True,
-            gridwidth=1, 
+            gridwidth=1,
             gridcolor='rgba(128,128,128,0.2)',
             showline=True,
             linewidth=1,
             linecolor='rgba(128,128,128,0.5)'
         )
     )
-    
+
     # Couleurs personnalisées
     colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FECA57"]
     if not color and len(fig.data) == 1:
         fig.update_traces(line=dict(color=colors[0], width=3))
-    
+
     return fig
 
 
@@ -76,7 +76,7 @@ def create_bar_chart(
     y: str,
     title: str = "",
     orientation: str = "v",
-    color: Optional[str] = None,
+    color: str | None = None,
     height: int = 400
 ) -> go.Figure:
     """
@@ -86,7 +86,7 @@ def create_bar_chart(
         fig = px.bar(data, x=x, y=y, color=color, title=title, orientation=orientation)
     else:
         fig = px.bar(data, x=x, y=y, title=title, orientation=orientation)
-    
+
     fig.update_layout(
         height=height,
         plot_bgcolor='rgba(0,0,0,0)',
@@ -95,7 +95,7 @@ def create_bar_chart(
         xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)'),
         yaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)')
     )
-    
+
     # Gradient pour les barres
     if not color:
         fig.update_traces(
@@ -104,7 +104,7 @@ def create_bar_chart(
                 line=dict(color='rgba(128,128,128,0.5)', width=1)
             )
         )
-    
+
     return fig
 
 
@@ -120,23 +120,23 @@ def create_pie_chart(
     Crée un graphique en secteurs (ou donut) stylé
     """
     fig = px.pie(data, values=values, names=names, title=title, hole=hole)
-    
+
     # Couleurs personnalisées
     colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FECA57", "#A8E6CF", "#FFB6C1"]
-    
+
     fig.update_layout(
         height=height,
         showlegend=True,
         legend=dict(orientation="v", x=1.05, y=0.5),
         title=dict(x=0.5, font=dict(size=16, color="#2C3E50"))
     )
-    
+
     fig.update_traces(
         marker=dict(colors=colors, line=dict(color='white', width=2)),
         textposition='inside',
         textinfo='percent+label'
     )
-    
+
     return fig
 
 
@@ -145,15 +145,15 @@ def create_scatter_plot(
     x: str,
     y: str,
     title: str = "",
-    size: Optional[str] = None,
-    color: Optional[str] = None,
+    size: str | None = None,
+    color: str | None = None,
     height: int = 400
 ) -> go.Figure:
     """
     Crée un nuage de points stylé
     """
     fig = px.scatter(data, x=x, y=y, size=size, color=color, title=title)
-    
+
     fig.update_layout(
         height=height,
         plot_bgcolor='rgba(0,0,0,0)',
@@ -162,7 +162,7 @@ def create_scatter_plot(
         xaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)'),
         yaxis=dict(showgrid=True, gridcolor='rgba(128,128,128,0.2)')
     )
-    
+
     return fig
 
 
@@ -182,14 +182,14 @@ def create_heatmap(
         colorscale=colorscale,
         showscale=True
     ))
-    
+
     fig.update_layout(
         title=dict(text=title, x=0.5, font=dict(size=16, color="#2C3E50")),
         height=height,
         xaxis=dict(side='bottom'),
         yaxis=dict(side='left')
     )
-    
+
     return fig
 
 
@@ -224,20 +224,20 @@ def create_gauge_chart(
             }
         }
     ))
-    
+
     fig.update_layout(
         height=height,
         font={'color': "#2C3E50", 'family': "Arial"},
         paper_bgcolor='rgba(0,0,0,0)',
         plot_bgcolor='rgba(0,0,0,0)'
     )
-    
+
     return fig
 
 
 def create_waterfall_chart(
-    categories: List[str],
-    values: List[float],
+    categories: list[str],
+    values: list[float],
     title: str = "",
     height: int = 400
 ) -> go.Figure:
@@ -257,7 +257,7 @@ def create_waterfall_chart(
         decreasing={"marker": {"color": "#FF6B6B"}},
         totals={"marker": {"color": "#45B7D1"}}
     ))
-    
+
     fig.update_layout(
         title=dict(text=title, x=0.5, font=dict(size=16, color="#2C3E50")),
         height=height,
@@ -265,14 +265,14 @@ def create_waterfall_chart(
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)'
     )
-    
+
     return fig
 
 
 def create_box_plot(
     data: pd.DataFrame,
     y: str,
-    x: Optional[str] = None,
+    x: str | None = None,
     title: str = "",
     height: int = 400
 ) -> go.Figure:
@@ -283,16 +283,16 @@ def create_box_plot(
         fig = px.box(data, x=x, y=y, title=title)
     else:
         fig = px.box(data, y=y, title=title)
-    
+
     fig.update_layout(
         height=height,
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)',
         title=dict(x=0.5, font=dict(size=16, color="#2C3E50"))
     )
-    
+
     fig.update_traces(marker_color='#FF6B6B', line_color='#2C3E50')
-    
+
     return fig
 
 
@@ -305,27 +305,27 @@ def display_chart_with_controls(
     Affiche un graphique avec des contrôles interactifs
     """
     st.markdown("#### Contrôles du graphique")
-    
+
     col1, col2, col3 = st.columns(3)
-    
+
     with col1:
         height = st.slider("Hauteur", 300, 800, 400)
-    
+
     with col2:
         show_toolbar = st.checkbox("Barre d'outils", True)
-    
+
     with col3:
         download = st.checkbox("Téléchargeable", True)
-    
+
     # Crée et affiche le graphique
     fig = chart_func(data, height=height, **kwargs)
-    
+
     config = {
         'displayModeBar': show_toolbar,
         'displaylogo': False,
         'modeBarButtonsToRemove': ['pan2d', 'lasso2d']
     }
-    
+
     if download:
         config['toImageButtonOptions'] = {
             'format': 'png',
@@ -334,11 +334,11 @@ def display_chart_with_controls(
             'width': 800,
             'scale': 1
         }
-    
+
     st.plotly_chart(fig, use_container_width=True, config=config)
 
 
-def create_dashboard_metrics_row(metrics: Dict[str, Any]):
+def create_dashboard_metrics_row(metrics: dict[str, Any]):
     """
     Crée une ligne de métriques pour un dashboard
     
@@ -346,13 +346,13 @@ def create_dashboard_metrics_row(metrics: Dict[str, Any]):
         metrics: Dict avec {nom: {value, delta, format_func}}
     """
     cols = st.columns(len(metrics))
-    
+
     for i, (name, metric_data) in enumerate(metrics.items()):
         with cols[i]:
             value = metric_data.get('value', 0)
             delta = metric_data.get('delta', None)
             format_func = metric_data.get('format_func', str)
-            
+
             st.metric(
                 label=name,
                 value=format_func(value),
@@ -362,8 +362,8 @@ def create_dashboard_metrics_row(metrics: Dict[str, Any]):
 
 def create_comparison_chart(
     data: pd.DataFrame,
-    categories: List[str],
-    values: List[str],
+    categories: list[str],
+    values: list[str],
     title: str = "",
     chart_type: str = "bar"
 ) -> go.Figure:
@@ -371,9 +371,9 @@ def create_comparison_chart(
     Crée un graphique de comparaison multi-séries
     """
     fig = go.Figure()
-    
+
     colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FECA57"]
-    
+
     for i, value_col in enumerate(values):
         if chart_type == "bar":
             fig.add_trace(go.Bar(
@@ -390,7 +390,7 @@ def create_comparison_chart(
                 name=value_col,
                 line=dict(color=colors[i % len(colors)], width=3)
             ))
-    
+
     fig.update_layout(
         title=dict(text=title, x=0.5, font=dict(size=16, color="#2C3E50")),
         barmode='group' if chart_type == "bar" else None,
@@ -399,14 +399,14 @@ def create_comparison_chart(
         plot_bgcolor='rgba(0,0,0,0)',
         paper_bgcolor='rgba(0,0,0,0)'
     )
-    
+
     return fig
 
 
 def create_time_series_chart(
     data: pd.DataFrame,
     date_col: str,
-    value_cols: List[str],
+    value_cols: list[str],
     title: str = "",
     show_range_selector: bool = True
 ) -> go.Figure:
@@ -414,9 +414,9 @@ def create_time_series_chart(
     Crée un graphique de série temporelle avec sélecteur de plage
     """
     fig = go.Figure()
-    
+
     colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FECA57"]
-    
+
     for i, col in enumerate(value_cols):
         fig.add_trace(go.Scatter(
             x=data[date_col],
@@ -425,7 +425,7 @@ def create_time_series_chart(
             name=col,
             line=dict(color=colors[i % len(colors)], width=2)
         ))
-    
+
     if show_range_selector:
         fig.update_layout(
             xaxis=dict(
@@ -441,7 +441,7 @@ def create_time_series_chart(
                 type="date"
             )
         )
-    
+
     fig.update_layout(
         title=dict(text=title, x=0.5, font=dict(size=16, color="#2C3E50")),
         hovermode='x unified',
@@ -449,14 +449,14 @@ def create_time_series_chart(
         paper_bgcolor='rgba(0,0,0,0)',
         legend=dict(orientation="h", yanchor="bottom", y=1.02, xanchor="right", x=1)
     )
-    
+
     return fig
 
 
 def create_multi_line_chart(
     data: pd.DataFrame,
     x: str,
-    y_columns: List[str],
+    y_columns: list[str],
     title: str = "",
     height: int = 400
 ) -> go.Figure:
@@ -471,9 +471,9 @@ def create_multi_line_chart(
         height: Hauteur du graphique
     """
     fig = go.Figure()
-    
+
     colors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4", "#FECA57"]
-    
+
     for i, y_col in enumerate(y_columns):
         fig.add_trace(go.Scatter(
             x=data[x],
@@ -483,7 +483,7 @@ def create_multi_line_chart(
             line=dict(color=colors[i % len(colors)], width=3),
             marker=dict(size=4)
         ))
-    
+
     fig.update_layout(
         title=dict(text=title, x=0.5, font=dict(size=16, color="#2C3E50")),
         height=height,
@@ -510,14 +510,14 @@ def create_multi_line_chart(
             linecolor='rgba(128,128,128,0.5)'
         )
     )
-    
+
     return fig
 
 
 def generate_sample_data(chart_type: str = "line") -> pd.DataFrame:
     """Génère des données d'exemple pour les graphiques"""
     np.random.seed(42)
-    
+
     if chart_type == "line":
         dates = pd.date_range(start='2024-01-01', periods=90, freq='D')
         data = pd.DataFrame({
@@ -525,7 +525,7 @@ def generate_sample_data(chart_type: str = "line") -> pd.DataFrame:
             'value': np.cumsum(np.random.randn(90) * 10) + 1000,
             'value2': np.cumsum(np.random.randn(90) * 8) + 800
         })
-    
+
     elif chart_type == "bar":
         categories = ['A', 'B', 'C', 'D', 'E']
         data = pd.DataFrame({
@@ -533,19 +533,19 @@ def generate_sample_data(chart_type: str = "line") -> pd.DataFrame:
             'value': np.random.randint(10, 100, len(categories)),
             'value2': np.random.randint(5, 80, len(categories))
         })
-    
+
     elif chart_type == "pie":
         categories = ['Segment A', 'Segment B', 'Segment C', 'Segment D']
         data = pd.DataFrame({
             'category': categories,
             'value': [30, 25, 25, 20]
         })
-    
+
     else:
         # Données par défaut
         data = pd.DataFrame({
             'x': range(10),
             'y': np.random.randint(1, 100, 10)
         })
-    
+
     return data

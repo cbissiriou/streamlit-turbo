@@ -4,8 +4,9 @@ Tests unitaires pour le module database
 
 import pytest
 from sqlmodel import Session, select
-from streamlit_template.database.models import User, ActivityLog, DataEntry
+
 from streamlit_template.database.engine import get_engine, init_db
+from streamlit_template.database.models import ActivityLog, DataEntry, User
 
 
 class TestDatabaseModels:

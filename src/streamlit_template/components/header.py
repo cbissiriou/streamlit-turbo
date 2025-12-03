@@ -20,21 +20,21 @@ def render_header(title: str = "Streamlit Template", subtitle: str = None):
         margin-bottom: 2rem;
     ">
     """, unsafe_allow_html=True)
-    
+
     col1, col2 = st.columns([3, 1])
-    
+
     with col1:
         st.title(f"🚀 {title}")
         if subtitle:
             st.markdown(f"*{subtitle}*")
-    
+
     with col2:
         st.markdown("""
         <div style="text-align: right; padding-top: 1rem;">
             <small>Streamlit Template</small>
         </div>
         """, unsafe_allow_html=True)
-    
+
     st.markdown("</div>", unsafe_allow_html=True)
 
 
