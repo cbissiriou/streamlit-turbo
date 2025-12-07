@@ -338,31 +338,6 @@ Décommentez le thème désiré dans le fichier de configuration.
 - [Documentation uv](https://github.com/astral-sh/uv)
 - [Documentation just](https://github.com/casey/just)
 
-## 🤝 Contribution
 
-Les contributions sont les bienvenues ! N'hésitez pas à :
-1. Fork le projet
-2. Créer une branche (`git checkout -b feature/amazing`)
-3. Commit vos changements (`git commit -m 'Add amazing feature'`)
-4. Push sur la branche (`git push origin feature/amazing`)
-5. Ouvrir une Pull Request
 
-## 📞 Support & Contact
 
-- 📧 **Email** : gael.penessot@gmail.com
-- 💼 **LinkedIn** : [Gaël Penessot](https://www.linkedin.com/in/gael-penessot/)
-- 🐛 **Issues** : [GitHub Issues](https://github.com/gpenessot/ultimate-streamlit-template/issues)
-
-## 📝 Licence
-
-MIT License - Libre d'utilisation et de modification
-
-**Créé avec ❤️ par [Gaël Penessot](https://www.mes-formations-data.fr)**
-
----
-
-⭐ **Ce template vous aide ?** Donnez-lui une étoile sur GitHub !
-
-## 📦 Version
-
-**v1.0.0** - StreamlitTurbo PRO - Production Ready
