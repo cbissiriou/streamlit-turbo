@@ -33,7 +33,9 @@ def track_page_view(page_name: str):
     # Stocker en base si analytics activé
     if st.secrets.get("monitoring", {}).get("enable_analytics", False):
         try:
-            with next(get_session()) as session:
+            session_gen = get_session()
+            session = next(session_gen)
+            try:
                 log_entry = ActivityLog(
                     user_email=user_email,
                     action="page_view",
@@ -42,6 +44,8 @@ def track_page_view(page_name: str):
                 )
                 session.add(log_entry)
                 session.commit()
+            finally:
+                session_gen.close()
         except Exception as e:
             # Ne pas bloquer l'app si le logging échoue
             log_event("analytics_error", error=str(e))
@@ -67,7 +71,9 @@ def track_action(action: str, details: dict[str, Any] | None = None, page: str |
 
     if st.secrets.get("monitoring", {}).get("enable_analytics", False):
         try:
-            with next(get_session()) as session:
+            session_gen = get_session()
+            session = next(session_gen)
+            try:
                 log_entry = ActivityLog(
                     user_email=user_email,
                     action=action,
@@ -77,6 +83,8 @@ def track_action(action: str, details: dict[str, Any] | None = None, page: str |
                 )
                 session.add(log_entry)
                 session.commit()
+            finally:
+                session_gen.close()
         except Exception as e:
             log_event("analytics_error", error=str(e))
 
@@ -92,7 +100,9 @@ def get_user_stats(user_email: str) -> dict[str, Any]:
         Dict avec les stats
     """
     try:
-        with next(get_session()) as session:
+        session_gen = get_session()
+        session = next(session_gen)
+        try:
             from sqlmodel import func, select
 
             # Nombre total d'actions
@@ -116,6 +126,8 @@ def get_user_stats(user_email: str) -> dict[str, Any]:
                     {"page": page, "count": count} for page, count in most_visited
                 ],
             }
+        finally:
+            session_gen.close()
     except Exception as e:
         log_event("stats_error", error=str(e))
         return {"error": str(e)}
@@ -129,7 +141,9 @@ def get_app_stats() -> dict[str, Any]:
         Dict avec les stats globales
     """
     try:
-        with next(get_session()) as session:
+        session_gen = get_session()
+        session = next(session_gen)
+        try:
             from sqlmodel import func, select
 
             from streamlit_template.database.models import User
@@ -150,6 +164,8 @@ def get_app_stats() -> dict[str, Any]:
                 "active_users": active_users,
                 "total_actions": total_actions,
             }
+        finally:
+            session_gen.close()
     except Exception as e:
         log_event("app_stats_error", error=str(e))
         return {"error": str(e)}
