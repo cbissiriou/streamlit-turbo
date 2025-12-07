@@ -121,7 +121,7 @@ def get_user_role() -> str:
                     email=user["email"],
                     google_sub=user["sub"],
                     name=user.get("name"),
-                    picture=user.get("picture"),
+                    picture_url=user.get("picture"),
                     role="user",
                 )
                 session.add(new_user)
