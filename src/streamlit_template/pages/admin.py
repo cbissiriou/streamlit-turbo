@@ -25,7 +25,9 @@ def render_admin_content():
     st.success(f"Bienvenue dans le panneau d'administration, **{user['name']}** !")
 
     # Onglets admin
-    tab1, tab2, tab3, tab4 = st.tabs(["📊 Statistiques", "👥 Utilisateurs", "🗄️ Base de données", "⚙️ Système"])
+    tab1, tab2, tab3, tab4 = st.tabs(
+        ["📊 Statistiques", "👥 Utilisateurs", "🗄️ Base de données", "⚙️ Système"]
+    )
 
     with tab1:
         render_stats_tab()

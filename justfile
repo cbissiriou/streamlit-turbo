@@ -11,9 +11,10 @@ PROJECT_NAME := "streamlit-template-pro"
 setup:
     @echo "Configuration du projet StreamlitTurbo PRO..."
     uv venv --python {{PYTHON_VERSION}}
-    uv sync
+    @echo "Synchronisation des dependances avec le venv..."
+    uv sync --python .venv/bin/python
     @echo "Installation des pre-commit hooks..."
-    uv run pre-commit install
+    uv run --python {{PYTHON_VERSION}} pre-commit install
     @echo "Setup termine! Utilisez 'just run' pour lancer l'application."
 
 # Lancement de l'application
@@ -22,7 +23,7 @@ run:
 
 # Synchronisation des dependances
 sync:
-    uv sync
+    uv sync --python .venv/bin/python
 
 # Ajout d'une dependance
 add PACKAGE:

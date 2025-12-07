@@ -26,7 +26,7 @@ class User(SQLModel, table=True):
     picture_url: str | None = None
 
     # Rôle et permissions
-    role: str = Field(default="user")  # user, admin, etc.
+    role: str = Field(default="admin")  # user, admin, etc.
     is_active: bool = Field(default=True)
 
     # Métadonnées

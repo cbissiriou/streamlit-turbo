@@ -478,25 +478,25 @@
         padding: 1rem 0;
         margin-bottom: 1rem;
     }
-    
+
     .header-title {
         font-size: 2rem;
     }
-    
+
     .metric-card {
         margin: 0.25rem;
         padding: 1rem;
     }
-    
+
     .info-box {
         padding: 1rem;
         margin: 1rem 0;
     }
-    
+
     .logo-placeholder {
         padding: 1rem;
     }
-    
+
     .logo-icon {
         font-size: 2.5rem;
     }
@@ -509,11 +509,11 @@
         width: 100%;
         margin-bottom: 0.5rem;
     }
-    
+
     .metric-value {
         font-size: 1.5rem;
     }
-    
+
     .header-title {
         font-size: 1.75rem;
     }

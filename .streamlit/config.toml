@@ -3,6 +3,7 @@ runOnSave = true
 maxUploadSize = 200
 enableXsrfProtection = true
 enableStaticServing = true
+port = 8501
 
 [browser]
 gatherUsageStats = false

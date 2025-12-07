@@ -12,7 +12,8 @@ def render_footer():
     Affiche un footer standardisé pour l'application
     """
     st.markdown("---")
-    st.markdown("""
+    st.markdown(
+        """
     <div style="
         padding: 1rem 0;
         text-align: center;
@@ -21,7 +22,9 @@ def render_footer():
         border-top: 1px solid #f0f2f6;
         margin-top: 2rem;
     ">
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
     col1, col2, col3 = st.columns([1, 2, 1])
 
@@ -43,8 +46,11 @@ def render_footer_minimal():
     Version minimaliste du footer
     """
     st.markdown("---")
-    st.markdown(f"""
+    st.markdown(
+        f"""
     <div style="text-align: center; color: #666; font-size: 0.7rem; padding: 1rem;">
         Streamlit Template MVP • © {datetime.now().year}
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )

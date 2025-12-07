@@ -24,6 +24,7 @@ track_page_view("analytics")
 # Header
 render_header("📊 Analytics", "Visualisations et analyse de données")
 
+
 # Authentification requise
 @require_auth
 def render_analytics_content():
@@ -100,7 +101,9 @@ def render_analytics_content():
     data_pie = generate_sample_data("pie")
 
     # Onglets pour différentes vues
-    tab1, tab2, tab3, tab4 = st.tabs(["📈 Tendances", "📊 Comparaisons", "🥧 Répartition", "📋 Données"])
+    tab1, tab2, tab3, tab4 = st.tabs(
+        ["📈 Tendances", "📊 Comparaisons", "🥧 Répartition", "📋 Données"]
+    )
 
     with tab1:
         st.markdown("#### Évolution temporelle")

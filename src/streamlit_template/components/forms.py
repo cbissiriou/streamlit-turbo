@@ -19,11 +19,11 @@ def create_form_field(
     help_text: str | None = None,
     required: bool = False,
     validators: list = None,
-    **kwargs
+    **kwargs,
 ) -> Any:
     """
     Crée un champ de formulaire générique avec validation
-    
+
     Args:
         field_type: Type de champ (text, email, number, etc.)
         key: Clé unique pour le champ
@@ -47,17 +47,12 @@ def create_form_field(
             value or "",
             key=key,
             help=help_text or "Format: exemple@domain.com",
-            **kwargs
+            **kwargs,
         )
 
     elif field_type == "password":
         result = st.text_input(
-            display_label,
-            value or "",
-            type="password",
-            key=key,
-            help=help_text,
-            **kwargs
+            display_label, value or "", type="password", key=key, help=help_text, **kwargs
         )
 
     elif field_type == "textarea":
@@ -67,21 +62,39 @@ def create_form_field(
         result = st.number_input(display_label, value=value, key=key, help=help_text, **kwargs)
 
     elif field_type == "slider":
-        min_val = kwargs.pop('min_value', 0)
-        max_val = kwargs.pop('max_value', 100)
-        result = st.slider(display_label, min_val, max_val, value or min_val, key=key, help=help_text, **kwargs)
+        min_val = kwargs.pop("min_value", 0)
+        max_val = kwargs.pop("max_value", 100)
+        result = st.slider(
+            display_label, min_val, max_val, value or min_val, key=key, help=help_text, **kwargs
+        )
 
     elif field_type == "selectbox":
-        options = kwargs.pop('options', [])
-        result = st.selectbox(display_label, options, index=0 if value is None else options.index(value) if value in options else 0, key=key, help=help_text, **kwargs)
+        options = kwargs.pop("options", [])
+        result = st.selectbox(
+            display_label,
+            options,
+            index=0 if value is None else options.index(value) if value in options else 0,
+            key=key,
+            help=help_text,
+            **kwargs,
+        )
 
     elif field_type == "multiselect":
-        options = kwargs.pop('options', [])
-        result = st.multiselect(display_label, options, default=value or [], key=key, help=help_text, **kwargs)
+        options = kwargs.pop("options", [])
+        result = st.multiselect(
+            display_label, options, default=value or [], key=key, help=help_text, **kwargs
+        )
 
     elif field_type == "radio":
-        options = kwargs.pop('options', [])
-        result = st.radio(display_label, options, index=0 if value is None else options.index(value) if value in options else 0, key=key, help=help_text, **kwargs)
+        options = kwargs.pop("options", [])
+        result = st.radio(
+            display_label,
+            options,
+            index=0 if value is None else options.index(value) if value in options else 0,
+            key=key,
+            help=help_text,
+            **kwargs,
+        )
 
     elif field_type == "checkbox":
         result = st.checkbox(display_label, value=value or False, key=key, help=help_text, **kwargs)
@@ -95,9 +108,16 @@ def create_form_field(
     elif field_type == "datetime":
         col1, col2 = st.columns(2)
         with col1:
-            date_val = st.date_input(f"{display_label} (Date)", value=value.date() if value else None, key=f"{key}_date", help=help_text)
+            date_val = st.date_input(
+                f"{display_label} (Date)",
+                value=value.date() if value else None,
+                key=f"{key}_date",
+                help=help_text,
+            )
         with col2:
-            time_val = st.time_input(f"{display_label} (Heure)", value=value.time() if value else None, key=f"{key}_time")
+            time_val = st.time_input(
+                f"{display_label} (Heure)", value=value.time() if value else None, key=f"{key}_time"
+            )
 
         if date_val and time_val:
             result = datetime.combine(date_val, time_val)
@@ -108,7 +128,9 @@ def create_form_field(
         result = st.file_uploader(display_label, key=key, help=help_text, **kwargs)
 
     elif field_type == "color":
-        result = st.color_picker(display_label, value=value or "#000000", key=key, help=help_text, **kwargs)
+        result = st.color_picker(
+            display_label, value=value or "#000000", key=key, help=help_text, **kwargs
+        )
 
     else:
         st.error(f"Type de champ non supporté: {field_type}")
@@ -135,20 +157,20 @@ class FormBuilder:
         label: str,
         required: bool = False,
         validators: list = None,
-        **field_kwargs
+        **field_kwargs,
     ):
         """Ajoute un champ au formulaire"""
         self.fields[field_name] = {
-            'type': field_type,
-            'label': label,
-            'required': required,
-            'kwargs': field_kwargs
+            "type": field_type,
+            "label": label,
+            "required": required,
+            "kwargs": field_kwargs,
         }
 
         # Ajoute les validateurs
         field_validators = []
         if required:
-            field_validators.append(COMMON_VALIDATORS['required'])
+            field_validators.append(COMMON_VALIDATORS["required"])
         if validators:
             field_validators.extend(validators)
 
@@ -176,11 +198,11 @@ class FormBuilder:
             # Rend chaque champ
             for field_name, field_config in self.fields.items():
                 value = create_form_field(
-                    field_config['type'],
+                    field_config["type"],
                     f"{self.form_key}_{field_name}",
-                    field_config['label'],
-                    required=field_config['required'],
-                    **field_config['kwargs']
+                    field_config["label"],
+                    required=field_config["required"],
+                    **field_config["kwargs"],
                 )
                 form_data[field_name] = value
 
@@ -216,20 +238,39 @@ def create_contact_form() -> dict[str, Any]:
     form = FormBuilder("contact_form", "📧 Formulaire de contact")
 
     form.add_section("Informations personnelles")
-    form.add_field("nom", "text", "Nom complet", required=True, validators=[COMMON_VALIDATORS['short_text']])
-    form.add_field("email", "email", "Adresse email", required=True, validators=[COMMON_VALIDATORS['email']])
-    form.add_field("telephone", "text", "Téléphone", validators=[COMMON_VALIDATORS['phone']])
+    form.add_field(
+        "nom", "text", "Nom complet", required=True, validators=[COMMON_VALIDATORS["short_text"]]
+    )
+    form.add_field(
+        "email", "email", "Adresse email", required=True, validators=[COMMON_VALIDATORS["email"]]
+    )
+    form.add_field("telephone", "text", "Téléphone", validators=[COMMON_VALIDATORS["phone"]])
 
     form.add_section("Message")
-    form.add_field("sujet", "selectbox", "Sujet", required=True,
-                   options=["Information générale", "Support technique", "Demande commerciale", "Autre"])
-    form.add_field("message", "textarea", "Votre message", required=True,
-                   validators=[COMMON_VALIDATORS['long_text']], height=150)
+    form.add_field(
+        "sujet",
+        "selectbox",
+        "Sujet",
+        required=True,
+        options=["Information générale", "Support technique", "Demande commerciale", "Autre"],
+    )
+    form.add_field(
+        "message",
+        "textarea",
+        "Votre message",
+        required=True,
+        validators=[COMMON_VALIDATORS["long_text"]],
+        height=150,
+    )
 
     form.add_section("Préférences")
     form.add_field("newsletter", "checkbox", "S'abonner à la newsletter")
-    form.add_field("contact_pref", "radio", "Moyen de contact préféré",
-                   options=["Email", "Téléphone", "Pas de préférence"])
+    form.add_field(
+        "contact_pref",
+        "radio",
+        "Moyen de contact préféré",
+        options=["Email", "Téléphone", "Pas de préférence"],
+    )
 
     return form.render()
 
@@ -241,22 +282,34 @@ def create_user_profile_form() -> dict[str, Any]:
     form.add_section("Informations de base")
     form.add_field("prenom", "text", "Prénom", required=True)
     form.add_field("nom", "text", "Nom", required=True)
-    form.add_field("email", "email", "Email", required=True, validators=[COMMON_VALIDATORS['email']])
+    form.add_field(
+        "email", "email", "Email", required=True, validators=[COMMON_VALIDATORS["email"]]
+    )
     form.add_field("date_naissance", "date", "Date de naissance")
 
     form.add_section("Informations professionnelles")
     form.add_field("entreprise", "text", "Entreprise")
     form.add_field("poste", "text", "Poste/Fonction")
-    form.add_field("secteur", "selectbox", "Secteur d'activité",
-                   options=["Technologies", "Finance", "Santé", "Éducation", "Commerce", "Autre"])
-    form.add_field("experience", "slider", "Années d'expérience",
-                   min_value=0, max_value=40, value=5)
+    form.add_field(
+        "secteur",
+        "selectbox",
+        "Secteur d'activité",
+        options=["Technologies", "Finance", "Santé", "Éducation", "Commerce", "Autre"],
+    )
+    form.add_field(
+        "experience", "slider", "Années d'expérience", min_value=0, max_value=40, value=5
+    )
 
     form.add_section("Préférences")
-    form.add_field("competences", "multiselect", "Compétences",
-                   options=["Python", "JavaScript", "Data Science", "Machine Learning", "Web Dev", "Mobile"])
-    form.add_field("photo", "file", "Photo de profil",
-                   accept_multiple_files=False, type=['jpg', 'jpeg', 'png'])
+    form.add_field(
+        "competences",
+        "multiselect",
+        "Compétences",
+        options=["Python", "JavaScript", "Data Science", "Machine Learning", "Web Dev", "Mobile"],
+    )
+    form.add_field(
+        "photo", "file", "Photo de profil", accept_multiple_files=False, type=["jpg", "jpeg", "png"]
+    )
 
     return form.render()
 
@@ -264,7 +317,7 @@ def create_user_profile_form() -> dict[str, Any]:
 def create_survey_form(questions: list[dict[str, Any]]) -> dict[str, Any]:
     """
     Crée un formulaire de sondage dynamique
-    
+
     Args:
         questions: Liste des questions avec format:
         [
@@ -282,19 +335,20 @@ def create_survey_form(questions: list[dict[str, Any]]) -> dict[str, Any]:
     form.add_section("Questionnaire", "Veuillez répondre aux questions suivantes:")
 
     for question in questions:
-        q_id = question['id']
-        q_text = question['text']
-        q_type = question['type']
-        q_required = question.get('required', False)
-        q_options = question.get('options', [])
+        q_id = question["id"]
+        q_text = question["text"]
+        q_type = question["type"]
+        q_required = question.get("required", False)
+        q_options = question.get("options", [])
 
-        if q_type in ['selectbox', 'radio', 'multiselect']:
+        if q_type in ["selectbox", "radio", "multiselect"]:
             form.add_field(q_id, q_type, q_text, required=q_required, options=q_options)
-        elif q_type == 'slider':
-            min_val = question.get('min', 1)
-            max_val = question.get('max', 5)
-            form.add_field(q_id, q_type, q_text, required=q_required,
-                          min_value=min_val, max_value=max_val)
+        elif q_type == "slider":
+            min_val = question.get("min", 1)
+            max_val = question.get("max", 5)
+            form.add_field(
+                q_id, q_type, q_text, required=q_required, min_value=min_val, max_value=max_val
+            )
         else:
             form.add_field(q_id, q_type, q_text, required=q_required)
 
@@ -306,19 +360,34 @@ def create_data_upload_form() -> dict[str, Any]:
     form = FormBuilder("data_upload", "📁 Import de données")
 
     form.add_section("Fichier de données")
-    form.add_field("file", "file", "Sélectionner un fichier", required=True,
-                   type=['csv', 'xlsx', 'json'], validators=[COMMON_VALIDATORS['csv_file']])
+    form.add_field(
+        "file",
+        "file",
+        "Sélectionner un fichier",
+        required=True,
+        type=["csv", "xlsx", "json"],
+        validators=[COMMON_VALIDATORS["csv_file"]],
+    )
 
     form.add_section("Configuration d'import")
-    form.add_field("separator", "selectbox", "Séparateur CSV",
-                   options=[",", ";", "\t", "|"], help="Séparateur pour les fichiers CSV")
-    form.add_field("encoding", "selectbox", "Encodage",
-                   options=["utf-8", "latin-1", "cp1252"])
+    form.add_field(
+        "separator",
+        "selectbox",
+        "Séparateur CSV",
+        options=[",", ";", "\t", "|"],
+        help="Séparateur pour les fichiers CSV",
+    )
+    form.add_field("encoding", "selectbox", "Encodage", options=["utf-8", "latin-1", "cp1252"])
     form.add_field("header", "checkbox", "Première ligne = en-têtes", value=True)
 
     form.add_section("Validation")
-    form.add_field("validate_data", "checkbox", "Valider les données", value=True,
-                   help="Vérifie la cohérence des données importées")
+    form.add_field(
+        "validate_data",
+        "checkbox",
+        "Valider les données",
+        value=True,
+        help="Vérifie la cohérence des données importées",
+    )
     form.add_field("remove_duplicates", "checkbox", "Supprimer les doublons", value=True)
 
     return form.render()
@@ -329,25 +398,35 @@ def create_settings_form() -> dict[str, Any]:
     form = FormBuilder("app_settings", "⚙️ Paramètres de l'application")
 
     form.add_section("Interface utilisateur")
-    form.add_field("theme", "selectbox", "Thème",
-                   options=["Light", "Dark", "Auto"])
-    form.add_field("language", "selectbox", "Langue",
-                   options=["Français", "English", "Español"])
-    form.add_field("sidebar_default", "selectbox", "État sidebar par défaut",
-                   options=["Expanded", "Collapsed"])
+    form.add_field("theme", "selectbox", "Thème", options=["Light", "Dark", "Auto"])
+    form.add_field("language", "selectbox", "Langue", options=["Français", "English", "Español"])
+    form.add_field(
+        "sidebar_default", "selectbox", "État sidebar par défaut", options=["Expanded", "Collapsed"]
+    )
 
     form.add_section("Notifications")
     form.add_field("email_notifications", "checkbox", "Notifications par email", value=True)
     form.add_field("browser_notifications", "checkbox", "Notifications navigateur")
-    form.add_field("notification_frequency", "radio", "Fréquence des notifications",
-                   options=["Immédiate", "Quotidienne", "Hebdomadaire"])
+    form.add_field(
+        "notification_frequency",
+        "radio",
+        "Fréquence des notifications",
+        options=["Immédiate", "Quotidienne", "Hebdomadaire"],
+    )
 
     form.add_section("Performance")
-    form.add_field("cache_duration", "slider", "Durée cache (heures)",
-                   min_value=1, max_value=24, value=6)
+    form.add_field(
+        "cache_duration", "slider", "Durée cache (heures)", min_value=1, max_value=24, value=6
+    )
     form.add_field("auto_refresh", "checkbox", "Actualisation automatique")
-    form.add_field("refresh_interval", "number", "Intervalle d'actualisation (sec)",
-                   min_value=30, max_value=300, value=60)
+    form.add_field(
+        "refresh_interval",
+        "number",
+        "Intervalle d'actualisation (sec)",
+        min_value=30,
+        max_value=300,
+        value=60,
+    )
 
     return form.render()
 
@@ -361,13 +440,18 @@ def create_search_form() -> dict[str, Any]:
 
         with col1:
             query = st.text_input("🔎 Recherche", placeholder="Entrez vos mots-clés...")
-            category = st.selectbox("📂 Catégorie",
-                                   options=["Toutes", "Documents", "Images", "Vidéos", "Autres"])
+            category = st.selectbox(
+                "📂 Catégorie", options=["Toutes", "Documents", "Images", "Vidéos", "Autres"]
+            )
 
         with col2:
-            date_range = st.date_input("📅 Période", value=[], help="Sélectionnez une plage de dates")
-            sort_by = st.selectbox("📊 Trier par",
-                                  options=["Pertinence", "Date (récent)", "Date (ancien)", "Nom", "Taille"])
+            date_range = st.date_input(
+                "📅 Période", value=[], help="Sélectionnez une plage de dates"
+            )
+            sort_by = st.selectbox(
+                "📊 Trier par",
+                options=["Pertinence", "Date (récent)", "Date (ancien)", "Nom", "Taille"],
+            )
 
         # Filtres avancés
         with st.expander("🔧 Filtres avancés"):
@@ -390,16 +474,16 @@ def create_search_form() -> dict[str, Any]:
 
         if submitted:
             return {
-                'query': query,
-                'category': category,
-                'date_range': list(date_range) if date_range else [],
-                'sort_by': sort_by,
-                'min_size': min_size,
-                'max_size': max_size if max_size > 0 else None,
-                'include_tags': [tag.strip() for tag in include_tags.split(',') if tag.strip()],
-                'exclude_tags': [tag.strip() for tag in exclude_tags.split(',') if tag.strip()],
-                'results_per_page': results_per_page,
-                'show_preview': show_preview
+                "query": query,
+                "category": category,
+                "date_range": list(date_range) if date_range else [],
+                "sort_by": sort_by,
+                "min_size": min_size,
+                "max_size": max_size if max_size > 0 else None,
+                "include_tags": [tag.strip() for tag in include_tags.split(",") if tag.strip()],
+                "exclude_tags": [tag.strip() for tag in exclude_tags.split(",") if tag.strip()],
+                "results_per_page": results_per_page,
+                "show_preview": show_preview,
             }
 
     return {}
@@ -413,7 +497,7 @@ def display_form_summary(form_data: dict[str, Any], title: str = "📋 Résumé 
     create_info_box(
         title="📋 Données soumises",
         content="Vos informations ont été enregistrées avec succès.",
-        type="success"
+        type="success",
     )
 
     with st.expander("Voir le détail des données"):
@@ -422,7 +506,7 @@ def display_form_summary(form_data: dict[str, Any], title: str = "📋 Résumé 
                 st.write(f"**{key.replace('_', ' ').title()}:** {value}")
             elif isinstance(value, list):
                 st.write(f"**{key.replace('_', ' ').title()}:** {', '.join(map(str, value))}")
-            elif hasattr(value, 'name'):  # Fichier uploadé
+            elif hasattr(value, "name"):  # Fichier uploadé
                 st.write(f"**{key.replace('_', ' ').title()}:** {value.name}")
             else:
                 st.write(f"**{key.replace('_', ' ').title()}:** {type(value).__name__}")
@@ -431,11 +515,11 @@ def display_form_summary(form_data: dict[str, Any], title: str = "📋 Résumé 
 def create_wizard_form(steps: list[dict[str, Any]]) -> dict[str, Any]:
     """
     Crée un formulaire en étapes (wizard)
-    
+
     Args:
         steps: Liste des étapes avec leurs champs
     """
-    if 'wizard_step' not in st.session_state:
+    if "wizard_step" not in st.session_state:
         st.session_state.wizard_step = 0
         st.session_state.wizard_data = {}
 
@@ -451,20 +535,17 @@ def create_wizard_form(steps: list[dict[str, Any]]) -> dict[str, Any]:
     step_config = steps[current_step]
     st.markdown(f"## {step_config['title']}")
 
-    if 'description' in step_config:
-        st.markdown(step_config['description'])
+    if "description" in step_config:
+        st.markdown(step_config["description"])
 
     with st.form(f"wizard_step_{current_step}"):
         step_data = {}
 
-        for field in step_config['fields']:
+        for field in step_config["fields"]:
             value = create_form_field(
-                field['type'],
-                field['key'],
-                field['label'],
-                **field.get('kwargs', {})
+                field["type"], field["key"], field["label"], **field.get("kwargs", {})
             )
-            step_data[field['key']] = value
+            step_data[field["key"]] = value
 
         col1, col2, col3 = st.columns(3)
 

@@ -34,12 +34,7 @@ class ThemeConfig:
 
 # Thèmes prédéfinis
 THEMES = {
-    "default": ThemeConfig(
-        name="Default",
-        primary_color="#FF6B6B",
-        secondary_color="#4ECDC4"
-    ),
-
+    "default": ThemeConfig(name="Default", primary_color="#FF6B6B", secondary_color="#4ECDC4"),
     "ocean": ThemeConfig(
         name="Ocean",
         primary_color="#0077BE",
@@ -47,9 +42,8 @@ THEMES = {
         accent_color="#5DADE2",
         success_color="#58D68D",
         warning_color="#F7DC6F",
-        error_color="#EC7063"
+        error_color="#EC7063",
     ),
-
     "forest": ThemeConfig(
         name="Forest",
         primary_color="#27AE60",
@@ -57,9 +51,8 @@ THEMES = {
         accent_color="#58D68D",
         success_color="#A9DFBF",
         warning_color="#F4D03F",
-        error_color="#E74C3C"
+        error_color="#E74C3C",
     ),
-
     "sunset": ThemeConfig(
         name="Sunset",
         primary_color="#E67E22",
@@ -67,9 +60,8 @@ THEMES = {
         accent_color="#F8C471",
         success_color="#82E0AA",
         warning_color="#F7DC6F",
-        error_color="#E74C3C"
+        error_color="#E74C3C",
     ),
-
     "purple": ThemeConfig(
         name="Purple",
         primary_color="#8E44AD",
@@ -77,9 +69,8 @@ THEMES = {
         accent_color="#BB8FCE",
         success_color="#82E0AA",
         warning_color="#F7DC6F",
-        error_color="#E74C3C"
+        error_color="#E74C3C",
     ),
-
     "dark": ThemeConfig(
         name="Dark",
         primary_color="#3498DB",
@@ -89,9 +80,8 @@ THEMES = {
         text_light="#BDC3C7",
         background_color="#2C3E50",
         background_light="#34495E",
-        border_color="#485563"
+        border_color="#485563",
     ),
-
     "minimal": ThemeConfig(
         name="Minimal",
         primary_color="#2C3E50",
@@ -100,8 +90,8 @@ THEMES = {
         success_color="#27AE60",
         warning_color="#F39C12",
         error_color="#E74C3C",
-        background_light="#FAFAFA"
-    )
+        background_light="#FAFAFA",
+    ),
 }
 
 
@@ -118,7 +108,7 @@ class ThemeManager:
 
     def get_current_theme(self) -> str:
         """Retourne le thème actuel"""
-        return st.session_state.get('current_theme', self.current_theme)
+        return st.session_state.get("current_theme", self.current_theme)
 
     def set_theme(self, theme_name: str):
         """Définit le thème actuel"""
@@ -133,7 +123,7 @@ class ThemeManager:
         if theme_name is None:
             theme_name = self.get_current_theme()
 
-        return THEMES.get(theme_name, THEMES['default'])
+        return THEMES.get(theme_name, THEMES["default"])
 
     def generate_css_variables(self, theme_name: str | None = None) -> str:
         """Génère les variables CSS pour un thème"""
@@ -147,13 +137,13 @@ class ThemeManager:
             --success-color: {config.success_color};
             --warning-color: {config.warning_color};
             --error-color: {config.error_color};
-            
+
             --text-color: {config.text_color};
             --text-light: {config.text_light};
             --background-color: {config.background_color};
             --background-light: {config.background_light};
             --border-color: {config.border_color};
-            
+
             --font-family: {config.font_family};
             --font-size-base: {config.font_size_base}px;
             --border-radius: {config.border_radius};
@@ -204,7 +194,7 @@ class ThemeManager:
             options=list(themes.keys()),
             format_func=lambda x: themes[x],
             index=list(themes.keys()).index(current) if current in themes else 0,
-            help="Choisissez un thème pour l'application"
+            help="Choisissez un thème pour l'application",
         )
 
         if selected != current:
@@ -248,7 +238,7 @@ class ThemeManager:
             <p>Couleur principale: {primary}</p>
             <p>Couleur secondaire: {secondary}</p>
         </div>
-        
+
         <div style="display: flex; gap: 1rem; margin: 1rem 0;">
             <div style="background: {success}; padding: 1rem; border-radius: 8px; color: white;">
                 Succès
@@ -275,7 +265,7 @@ class ThemeManager:
                 accent_color=accent,
                 success_color=success,
                 warning_color=warning,
-                error_color=error
+                error_color=error,
             )
 
             # Ajoute le thème aux thèmes disponibles
@@ -296,24 +286,16 @@ class ThemeManager:
                 "accent": config.accent_color,
                 "success": config.success_color,
                 "warning": config.warning_color,
-                "error": config.error_color
+                "error": config.error_color,
             },
-            "text": {
-                "color": config.text_color,
-                "light": config.text_light
-            },
+            "text": {"color": config.text_color, "light": config.text_light},
             "background": {
                 "main": config.background_color,
                 "light": config.background_light,
-                "border": config.border_color
+                "border": config.border_color,
             },
-            "typography": {
-                "font_family": config.font_family,
-                "font_size": config.font_size_base
-            },
-            "ui": {
-                "border_radius": config.border_radius
-            }
+            "typography": {"font_family": config.font_family, "font_size": config.font_size_base},
+            "ui": {"border_radius": config.border_radius},
         }
 
     def import_theme(self, theme_data: dict[str, Any], theme_key: str):
@@ -340,7 +322,7 @@ class ThemeManager:
                 border_color=background.get("border", "#E1E8ED"),
                 font_family=typography.get("font_family", "sans-serif"),
                 font_size_base=typography.get("font_size", 14),
-                border_radius=ui.get("border_radius", "8px")
+                border_radius=ui.get("border_radius", "8px"),
             )
 
             THEMES[theme_key] = imported_theme

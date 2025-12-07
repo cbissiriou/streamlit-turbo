@@ -11,4 +11,11 @@ from streamlit_template.monitoring.analytics import (
 )
 from streamlit_template.monitoring.logger import get_logger, log_event
 
-__all__ = ["get_logger", "log_event", "track_page_view", "track_action", "get_user_stats", "get_app_stats"]
+__all__ = [
+    "get_logger",
+    "log_event",
+    "track_page_view",
+    "track_action",
+    "get_user_stats",
+    "get_app_stats",
+]

@@ -43,7 +43,8 @@ class Modal:
         """
         if self.is_open():
             # Style CSS pour ressembler à un modal
-            st.markdown(f"""
+            st.markdown(
+                f"""
             <style>
             .modal-container {{
                 position: fixed;
@@ -58,7 +59,7 @@ class Modal:
                 z-index: 1000;
                 padding: 0;
             }}
-            
+
             .modal-overlay {{
                 position: fixed;
                 top: 0;
@@ -68,7 +69,7 @@ class Modal:
                 background: rgba(0,0,0,0.5);
                 z-index: 999;
             }}
-            
+
             .modal-header {{
                 background: linear-gradient(135deg, #FF6B6B 0%, #4ECDC4 100%);
                 color: white;
@@ -77,12 +78,14 @@ class Modal:
                 font-weight: bold;
                 font-size: 1.2rem;
             }}
-            
+
             .modal-content {{
                 padding: 1.5rem;
             }}
             </style>
-            """, unsafe_allow_html=True)
+            """,
+                unsafe_allow_html=True,
+            )
 
             # Container principal du modal
             modal_container = st.container()
@@ -109,11 +112,11 @@ def confirmation_dialog(
     title: str = "Confirmation",
     confirm_text: str = "Confirmer",
     cancel_text: str = "Annuler",
-    key: str = "confirm_dialog"
+    key: str = "confirm_dialog",
 ) -> bool | None:
     """
     Affiche un dialog de confirmation
-    
+
     Returns:
         True si confirmé, False si annulé, None si pas encore répondu
     """
@@ -146,20 +149,17 @@ def confirmation_dialog(
 
 
 def info_dialog(
-    message: str,
-    title: str = "Information",
-    dialog_type: str = "info",
-    key: str = "info_dialog"
+    message: str, title: str = "Information", dialog_type: str = "info", key: str = "info_dialog"
 ) -> bool:
     """
     Affiche un dialog d'information
-    
+
     Args:
         message: Message à afficher
         title: Titre du dialog
         dialog_type: Type (info, success, warning, error)
         key: Clé unique
-    
+
     Returns:
         True si le dialog a été fermé
     """
@@ -173,12 +173,7 @@ def info_dialog(
     if container:
         with container:
             # Icône selon le type
-            icons = {
-                "info": "ℹ️",
-                "success": "✅",
-                "warning": "⚠️",
-                "error": "❌"
-            }
+            icons = {"info": "ℹ️", "success": "✅", "warning": "⚠️", "error": "❌"}
 
             icon = icons.get(dialog_type, "ℹ️")
 
@@ -201,11 +196,11 @@ def input_dialog(
     title: str = "Saisie",
     input_type: str = "text",
     default_value: str = "",
-    key: str = "input_dialog"
+    key: str = "input_dialog",
 ) -> str | None:
     """
     Affiche un dialog de saisie
-    
+
     Returns:
         La valeur saisie ou None si annulé
     """
@@ -226,7 +221,9 @@ def input_dialog(
             elif input_type == "textarea":
                 value = st.text_area("", value=default_value, key=f"{key}_input")
             elif input_type == "number":
-                value = st.number_input("", value=float(default_value) if default_value else 0.0, key=f"{key}_input")
+                value = st.number_input(
+                    "", value=float(default_value) if default_value else 0.0, key=f"{key}_input"
+                )
             elif input_type == "password":
                 value = st.text_input("", type="password", key=f"{key}_input")
             else:
@@ -252,7 +249,7 @@ def input_dialog(
 def progress_dialog(
     title: str = "Progression",
     message: str = "Traitement en cours...",
-    key: str = "progress_dialog"
+    key: str = "progress_dialog",
 ):
     """
     Affiche un dialog de progression
@@ -278,10 +275,7 @@ def progress_dialog(
 
 
 def choice_dialog(
-    message: str,
-    choices: list,
-    title: str = "Choix",
-    key: str = "choice_dialog"
+    message: str, choices: list, title: str = "Choix", key: str = "choice_dialog"
 ) -> str | None:
     """
     Affiche un dialog de choix multiple
@@ -320,7 +314,7 @@ def file_dialog(
     title: str = "Sélection de fichier",
     accept_multiple: bool = False,
     file_types: list = None,
-    key: str = "file_dialog"
+    key: str = "file_dialog",
 ):
     """
     Dialog de sélection de fichier
@@ -338,7 +332,7 @@ def file_dialog(
                 "Choisissez un fichier",
                 accept_multiple_files=accept_multiple,
                 type=file_types,
-                key=f"{key}_uploader"
+                key=f"{key}_uploader",
             )
 
             st.markdown("")
@@ -361,7 +355,7 @@ def file_dialog(
 def custom_dialog(content_func: Callable, title: str, key: str, **kwargs):
     """
     Dialog personnalisé avec fonction de contenu
-    
+
     Args:
         content_func: Fonction qui génère le contenu du dialog
         title: Titre du dialog
@@ -402,10 +396,7 @@ class DialogManager:
         self.active_dialogs = set()
 
     def show_confirmation(
-        self,
-        message: str,
-        title: str = "Confirmation",
-        key: str = "confirmation"
+        self, message: str, title: str = "Confirmation", key: str = "confirmation"
     ) -> bool | None:
         """Affiche un dialog de confirmation en gérant les conflits"""
         if key not in self.active_dialogs:
@@ -419,11 +410,7 @@ class DialogManager:
         return result
 
     def show_info(
-        self,
-        message: str,
-        title: str = "Information",
-        dialog_type: str = "info",
-        key: str = "info"
+        self, message: str, title: str = "Information", dialog_type: str = "info", key: str = "info"
     ) -> bool:
         """Affiche un dialog d'information"""
         if key not in self.active_dialogs:
@@ -442,7 +429,7 @@ class DialogManager:
         title: str = "Saisie",
         input_type: str = "text",
         default_value: str = "",
-        key: str = "input"
+        key: str = "input",
     ) -> str | None:
         """Affiche un dialog de saisie"""
         if key not in self.active_dialogs:
@@ -460,21 +447,17 @@ class DialogManager:
 dialog_manager = DialogManager()
 
 
-def toast_notification(
-    message: str,
-    notification_type: str = "info",
-    duration: float = 3.0
-):
+def toast_notification(message: str, notification_type: str = "info", duration: float = 3.0):
     """
     Affiche une notification toast (temporaire)
-    
+
     Args:
         message: Message à afficher
         notification_type: Type (info, success, warning, error)
         duration: Durée d'affichage en secondes
     """
     # Utilise st.toast si disponible (Streamlit >= 1.27)
-    if hasattr(st, 'toast'):
+    if hasattr(st, "toast"):
         if notification_type == "success":
             st.toast(f"✅ {message}", icon="✅")
         elif notification_type == "warning":

@@ -22,7 +22,7 @@ class CacheManager:
         """Génère une clé unique pour la fonction et ses arguments"""
         key_data = (func_name, args, sorted(kwargs.items()))
         key_str = str(key_data)
-        return hashlib.md5(key_str.encode()).hexdigest()
+        return hashlib.md5(key_str.encode(), usedforsecurity=False).hexdigest()
 
     def _is_expired(self, cache_entry: dict) -> bool:
         """Vérifie si l'entrée de cache a expiré"""
@@ -46,11 +46,7 @@ class CacheManager:
         ttl = ttl or self.default_ttl
         expires_at = datetime.now() + timedelta(seconds=ttl)
 
-        self._cache[key] = {
-            "value": value,
-            "created_at": datetime.now(),
-            "expires_at": expires_at
-        }
+        self._cache[key] = {"value": value, "created_at": datetime.now(), "expires_at": expires_at}
 
     def invalidate(self, key: str) -> None:
         """Supprime une entrée du cache"""
@@ -67,10 +63,7 @@ class CacheManager:
 
     def cleanup_expired(self) -> int:
         """Nettoie les entrées expirées et retourne le nombre supprimé"""
-        expired_keys = [
-            key for key, entry in self._cache.items()
-            if self._is_expired(entry)
-        ]
+        expired_keys = [key for key, entry in self._cache.items() if self._is_expired(entry)]
 
         for key in expired_keys:
             del self._cache[key]
@@ -85,20 +78,17 @@ _cache_manager = CacheManager()
 def cached_function(ttl: int = 3600, key_prefix: str = ""):
     """
     Décorateur pour mettre en cache les résultats de fonction
-    
+
     Args:
         ttl: Temps de vie en secondes
         key_prefix: Préfixe pour la clé de cache
     """
+
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs):
             # Génère la clé de cache
-            cache_key = _cache_manager._generate_key(
-                f"{key_prefix}_{func.__name__}",
-                args,
-                kwargs
-            )
+            cache_key = _cache_manager._generate_key(f"{key_prefix}_{func.__name__}", args, kwargs)
 
             # Vérifie le cache
             cached_result = _cache_manager.get(cache_key)
@@ -110,7 +100,9 @@ def cached_function(ttl: int = 3600, key_prefix: str = ""):
             _cache_manager.set(cache_key, result, ttl)
 
             return result
+
         return wrapper
+
     return decorator
 
 
@@ -118,6 +110,7 @@ def st_cached_data(func: Callable = None, *, ttl: int = 3600, show_spinner: str 
     """
     Version simplifiée du cache Streamlit avec gestion d'erreur
     """
+
     def decorator(f):
         @st.cache_data(ttl=ttl, show_spinner=show_spinner)
         @wraps(f)
@@ -127,6 +120,7 @@ def st_cached_data(func: Callable = None, *, ttl: int = 3600, show_spinner: str 
             except Exception as e:
                 st.error(f"Erreur lors du chargement des données: {str(e)}")
                 return None
+
         return wrapper
 
     if func is None:
@@ -145,5 +139,5 @@ def get_cache_stats() -> dict[str, Any]:
     """Retourne les statistiques du cache"""
     return {
         "cache_size": _cache_manager.size(),
-        "expired_cleaned": _cache_manager.cleanup_expired()
+        "expired_cleaned": _cache_manager.cleanup_expired(),
     }

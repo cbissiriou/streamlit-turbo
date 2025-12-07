@@ -157,13 +157,15 @@ else:
 
     # Informations utilisateur
     with st.expander("ℹ️ Informations détaillées"):
-        st.json({
-            "email": user["email"],
-            "name": user["name"],
-            "sub": user["sub"],
-            "email_verified": user.get("email_verified", False),
-            "picture": user.get("picture", "N/A"),
-        })
+        st.json(
+            {
+                "email": user["email"],
+                "name": user["name"],
+                "sub": user["sub"],
+                "email_verified": user.get("email_verified", False),
+                "picture": user.get("picture", "N/A"),
+            }
+        )
 
     # Quick actions
     st.markdown("### ⚡ Actions Rapides")

@@ -6,6 +6,10 @@ from datetime import datetime
 from typing import Any
 
 import streamlit as st
+from sqlmodel import select
+
+from streamlit_template.database import User as UserModel
+from streamlit_template.database import get_session
 
 
 def is_authenticated() -> bool:
@@ -105,12 +109,37 @@ def get_user_role() -> str:
     # TODO: Implémenter la logique de rôles depuis la base de données
     # Pour l'instant, tous les utilisateurs authentifiés sont des "user"
     # Les admins pourraient être définis dans secrets.toml ou en base
+    try:
+        with next(get_session()) as session:
+            statement = select(UserModel).where(UserModel.email == user["email"])
+            db_user = session.exec(statement).first()
+            if db_user:
+                return db_user.role
+            else:
+                # Utilisateur pas encore en base, créer avec role "user"
+                new_user = UserModel(
+                    email=user["email"],
+                    google_sub=user["sub"],
+                    name=user.get("name"),
+                    picture=user.get("picture"),
+                    role="user",
+                )
+                session.add(new_user)
+                session.commit()
+                session.refresh(new_user)
+                return "user"
+    except Exception as e:
+        admin_emails = st.secrets.get("admin_emails", [])
+        if user.get("email") in admin_emails:
+            return "admin"
+        st.error(f"Erreur lors de la récupération du rôle: {e}")
+        return "user"
 
-    admin_emails = st.secrets.get("admin_emails", [])
-    if user.get("email") in admin_emails:
-        return "admin"
+    # admin_emails = st.secrets.get("admin_emails", [])
+    # if user.get("email") in admin_emails:
+    #     return "admin"
 
-    return "user"
+    # return "user"
 
 
 def init_session_state():

@@ -19,5 +19,5 @@ __all__ = [
     "theme_manager",
     "apply_theme",
     "get_current_theme",
-    "create_theme_selector"
+    "create_theme_selector",
 ]

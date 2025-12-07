@@ -50,8 +50,7 @@ def require_auth(func: Callable | None = None, *, redirect_message: str = None):
 
 
 def require_role(
-    allowed_roles: list[str],
-    denied_message: str = "Vous n'avez pas les permissions nécessaires."
+    allowed_roles: list[str], denied_message: str = "Vous n'avez pas les permissions nécessaires."
 ):
     """
     Décorateur pour restreindre l'accès selon le rôle utilisateur
@@ -65,6 +64,7 @@ def require_role(
         allowed_roles: Liste des rôles autorisés
         denied_message: Message affiché si l'utilisateur n'a pas le bon rôle
     """
+
     def decorator(func: Callable) -> Callable:
         @wraps(func)
         def wrapper(*args, **kwargs):
@@ -98,6 +98,7 @@ def public_page(func: Callable) -> Callable:
         def home_page():
             st.write("Page publique")
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         return func(*args, **kwargs)

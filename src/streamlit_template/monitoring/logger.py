@@ -15,7 +15,9 @@ structlog.configure(
         structlog.processors.add_log_level,
         structlog.processors.TimeStamper(fmt="iso"),
         structlog.processors.StackInfoRenderer(),
-        structlog.dev.ConsoleRenderer() if sys.stderr.isatty() else structlog.processors.JSONRenderer(),
+        structlog.dev.ConsoleRenderer()
+        if sys.stderr.isatty()
+        else structlog.processors.JSONRenderer(),
     ],
     wrapper_class=structlog.make_filtering_bound_logger(logging.INFO),
     context_class=dict,
@@ -65,7 +67,9 @@ def setup_file_logging(log_dir: str = "logs"):
 
     # Format JSON pour parsing facile
     file_handler.setFormatter(
-        logging.Formatter('{"time": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}')
+        logging.Formatter(
+            '{"time": "%(asctime)s", "level": "%(levelname)s", "message": "%(message)s"}'
+        )
     )
 
     # Ajouter au logger root

@@ -14,16 +14,17 @@ class TestPagesIntegration:
     @pytest.fixture
     def mock_streamlit_components(self):
         """Mock des composants Streamlit de base"""
-        with patch("streamlit.markdown") as mock_markdown, \
-             patch("streamlit.success") as mock_success, \
-             patch("streamlit.error") as mock_error, \
-             patch("streamlit.info") as mock_info, \
-             patch("streamlit.warning") as mock_warning, \
-             patch("streamlit.columns") as mock_columns, \
-             patch("streamlit.metric") as mock_metric, \
-             patch("streamlit.button") as mock_button, \
-             patch("streamlit.tabs") as mock_tabs:
-
+        with (
+            patch("streamlit.markdown") as mock_markdown,
+            patch("streamlit.success") as mock_success,
+            patch("streamlit.error") as mock_error,
+            patch("streamlit.info") as mock_info,
+            patch("streamlit.warning") as mock_warning,
+            patch("streamlit.columns") as mock_columns,
+            patch("streamlit.metric") as mock_metric,
+            patch("streamlit.button") as mock_button,
+            patch("streamlit.tabs") as mock_tabs,
+        ):
             # Configure les mocks
             mock_columns.return_value = [Mock(), Mock(), Mock(), Mock()]
             mock_tabs.return_value = [Mock(), Mock(), Mock()]
@@ -63,7 +64,9 @@ class TestPagesIntegration:
                 with patch("streamlit_template.monitoring.track_page_view"):
                     with patch("streamlit_template.components.render_header"):
                         with patch("streamlit_template.components.render_footer"):
-                            with patch("streamlit_template.auth.session.get_user_role", return_value="user"):
+                            with patch(
+                                "streamlit_template.auth.session.get_user_role", return_value="user"
+                            ):
                                 try:
                                     success = True
                                 except Exception:

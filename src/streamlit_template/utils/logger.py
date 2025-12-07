@@ -21,11 +21,13 @@ class StreamlitLogHandler(logging.Handler):
     def emit(self, record):
         """Émet un message de log"""
         msg = self.format(record)
-        self.log_messages.append({
-            'level': record.levelname,
-            'message': msg,
-            'timestamp': datetime.fromtimestamp(record.created)
-        })
+        self.log_messages.append(
+            {
+                "level": record.levelname,
+                "message": msg,
+                "timestamp": datetime.fromtimestamp(record.created),
+            }
+        )
 
         # Limite le nombre de messages stockés
         if len(self.log_messages) > 100:
@@ -36,15 +38,15 @@ class StreamlitLogHandler(logging.Handler):
         recent_logs = self.log_messages[-max_messages:]
 
         for log_entry in recent_logs:
-            level = log_entry['level']
-            message = log_entry['message']
-            timestamp = log_entry['timestamp'].strftime("%H:%M:%S")
+            level = log_entry["level"]
+            message = log_entry["message"]
+            timestamp = log_entry["timestamp"].strftime("%H:%M:%S")
 
-            if level == 'ERROR':
+            if level == "ERROR":
                 st.error(f"[{timestamp}] {message}")
-            elif level == 'WARNING':
+            elif level == "WARNING":
                 st.warning(f"[{timestamp}] {message}")
-            elif level == 'INFO':
+            elif level == "INFO":
                 st.info(f"[{timestamp}] {message}")
             else:
                 st.text(f"[{timestamp}] {message}")
@@ -55,27 +57,27 @@ class ColoredFormatter(logging.Formatter):
 
     # Codes couleur ANSI
     COLORS = {
-        'DEBUG': '\033[36m',      # Cyan
-        'INFO': '\033[32m',       # Vert
-        'WARNING': '\033[33m',    # Jaune
-        'ERROR': '\033[31m',      # Rouge
-        'CRITICAL': '\033[35m',   # Magenta
-        'RESET': '\033[0m'        # Reset
+        "DEBUG": "\033[36m",  # Cyan
+        "INFO": "\033[32m",  # Vert
+        "WARNING": "\033[33m",  # Jaune
+        "ERROR": "\033[31m",  # Rouge
+        "CRITICAL": "\033[35m",  # Magenta
+        "RESET": "\033[0m",  # Reset
     }
 
     def format(self, record):
         # Ajoute la couleur
-        color = self.COLORS.get(record.levelname, self.COLORS['RESET'])
-        reset = self.COLORS['RESET']
+        color = self.COLORS.get(record.levelname, self.COLORS["RESET"])
+        reset = self.COLORS["RESET"]
 
         # Format de base
         formatted = super().format(record)
 
         # Applique la couleur seulement au niveau
-        parts = formatted.split(' - ', 2)
+        parts = formatted.split(" - ", 2)
         if len(parts) >= 2:
             level_part = parts[0]
-            message_part = ' - '.join(parts[1:])
+            message_part = " - ".join(parts[1:])
             return f"{color}{level_part}{reset} - {message_part}"
 
         return f"{color}{formatted}{reset}"
@@ -85,17 +87,17 @@ def setup_logging(
     level: str = "INFO",
     log_file: str | None = None,
     enable_streamlit: bool = False,
-    format_string: str | None = None
+    format_string: str | None = None,
 ) -> logging.Logger:
     """
     Configure le système de logging
-    
+
     Args:
         level: Niveau de log (DEBUG, INFO, WARNING, ERROR, CRITICAL)
         log_file: Chemin vers le fichier de log (optionnel)
         enable_streamlit: Active le handler Streamlit
         format_string: Format personnalisé des messages
-    
+
     Returns:
         Logger configuré
     """
@@ -104,7 +106,7 @@ def setup_logging(
         format_string = "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
     # Logger principal
-    logger = logging.getLogger('streamlit_template')
+    logger = logging.getLogger("streamlit_template")
     logger.setLevel(getattr(logging, level.upper()))
 
     # Évite la duplication des handlers
@@ -143,7 +145,7 @@ def setup_logging(
         logger.addHandler(streamlit_handler)
 
         # Stocke le handler pour accès ultérieur
-        if 'streamlit_log_handler' not in st.session_state:
+        if "streamlit_log_handler" not in st.session_state:
             st.session_state.streamlit_log_handler = streamlit_handler
 
     return logger
@@ -152,15 +154,15 @@ def setup_logging(
 def get_logger(name: str = None) -> logging.Logger:
     """
     Récupère un logger configuré
-    
+
     Args:
         name: Nom du logger (optionnel)
-    
+
     Returns:
         Instance du logger
     """
     if name is None:
-        name = 'streamlit_template'
+        name = "streamlit_template"
 
     logger = logging.getLogger(name)
 
@@ -202,7 +204,7 @@ def log_data_operation(operation: str, dataset_name: str, record_count: int = No
 
 def display_log_viewer():
     """Affiche un visualiseur de logs dans Streamlit"""
-    if 'streamlit_log_handler' in st.session_state:
+    if "streamlit_log_handler" in st.session_state:
         handler = st.session_state.streamlit_log_handler
 
         st.subheader("📋 Logs de l'application")
@@ -214,28 +216,23 @@ def display_log_viewer():
             with col1:
                 level_filter = st.selectbox(
                     "Niveau minimum",
-                    options=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
-                    index=1
+                    options=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"],
+                    index=1,
                 )
 
             with col2:
                 max_messages = st.number_input(
-                    "Nombre max de messages",
-                    min_value=10,
-                    max_value=100,
-                    value=20
+                    "Nombre max de messages", min_value=10, max_value=100, value=20
                 )
 
             # Filtre les messages
-            level_hierarchy = {
-                'DEBUG': 0, 'INFO': 1, 'WARNING': 2,
-                'ERROR': 3, 'CRITICAL': 4
-            }
+            level_hierarchy = {"DEBUG": 0, "INFO": 1, "WARNING": 2, "ERROR": 3, "CRITICAL": 4}
 
             min_level = level_hierarchy[level_filter]
             filtered_logs = [
-                log for log in handler.log_messages[-max_messages:]
-                if level_hierarchy.get(log['level'], 0) >= min_level
+                log
+                for log in handler.log_messages[-max_messages:]
+                if level_hierarchy.get(log["level"], 0) >= min_level
             ]
 
             if filtered_logs:
@@ -250,7 +247,7 @@ def display_log_viewer():
 
 def clear_logs():
     """Efface tous les logs stockés"""
-    if 'streamlit_log_handler' in st.session_state:
+    if "streamlit_log_handler" in st.session_state:
         st.session_state.streamlit_log_handler.log_messages.clear()
         st.success("Logs effacés!")
 
@@ -263,9 +260,5 @@ def init_default_logger(level: str = "INFO"):
     """Initialise le logger par défaut de l'application"""
     global DEFAULT_LOGGER
     if DEFAULT_LOGGER is None:
-        DEFAULT_LOGGER = setup_logging(
-            level=level,
-            log_file="logs/app.log",
-            enable_streamlit=True
-        )
+        DEFAULT_LOGGER = setup_logging(level=level, log_file="logs/app.log", enable_streamlit=True)
     return DEFAULT_LOGGER

@@ -32,7 +32,9 @@ class TestAuthSession:
             # Créer un mock user avec is_logged_in et get()
             mock_user = Mock()
             mock_user.is_logged_in = True
-            mock_user.get = Mock(side_effect=lambda key, default=None: sample_user_data.get(key, default))
+            mock_user.get = Mock(
+                side_effect=lambda key, default=None: sample_user_data.get(key, default)
+            )
             mock_st.user = mock_user
 
             user = get_current_user()

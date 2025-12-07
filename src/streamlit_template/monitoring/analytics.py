@@ -112,7 +112,9 @@ def get_user_stats(user_email: str) -> dict[str, Any]:
 
             return {
                 "total_actions": total_actions,
-                "most_visited_pages": [{"page": page, "count": count} for page, count in most_visited],
+                "most_visited_pages": [
+                    {"page": page, "count": count} for page, count in most_visited
+                ],
             }
     except Exception as e:
         log_event("stats_error", error=str(e))

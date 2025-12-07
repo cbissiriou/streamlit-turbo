@@ -14,11 +14,11 @@ import streamlit as st
 def format_number(value: int | float, precision: int = 2, suffix: str = "") -> str:
     """Formate un nombre avec séparateurs et suffixe"""
     if value >= 1e9:
-        return f"{value/1e9:.{precision}f}B{suffix}"
+        return f"{value / 1e9:.{precision}f}B{suffix}"
     elif value >= 1e6:
-        return f"{value/1e6:.{precision}f}M{suffix}"
+        return f"{value / 1e6:.{precision}f}M{suffix}"
     elif value >= 1e3:
-        return f"{value/1e3:.{precision}f}K{suffix}"
+        return f"{value / 1e3:.{precision}f}K{suffix}"
     else:
         return f"{value:.{precision}f}{suffix}"
 
@@ -54,20 +54,20 @@ def truncate_text(text: str, max_length: int = 50, suffix: str = "...") -> str:
     """Tronque un texte à une longueur maximale"""
     if len(text) <= max_length:
         return text
-    return text[:max_length - len(suffix)] + suffix
+    return text[: max_length - len(suffix)] + suffix
 
 
-def create_download_link(data: str | bytes | pd.DataFrame,
-                        filename: str,
-                        mime_type: str = "text/plain") -> str:
+def create_download_link(
+    data: str | bytes | pd.DataFrame, filename: str, mime_type: str = "text/plain"
+) -> str:
     """Crée un lien de téléchargement pour des données"""
 
     if isinstance(data, pd.DataFrame):
-        if filename.endswith('.csv'):
+        if filename.endswith(".csv"):
             data = data.to_csv(index=False)
             mime_type = "text/csv"
-        elif filename.endswith('.json'):
-            data = data.to_json(orient='records', indent=2)
+        elif filename.endswith(".json"):
+            data = data.to_json(orient="records", indent=2)
             mime_type = "application/json"
 
     if isinstance(data, str):
@@ -84,7 +84,7 @@ def df_to_download_link(df: pd.DataFrame, filename: str, format_type: str = "csv
         csv = df.to_csv(index=False)
         return create_download_link(csv, filename, "text/csv")
     elif format_type.lower() == "json":
-        json_str = df.to_json(orient='records', indent=2)
+        json_str = df.to_json(orient="records", indent=2)
         return create_download_link(json_str, filename, "application/json")
     else:
         raise ValueError("Format supporté: csv, json")
@@ -96,10 +96,10 @@ def clean_dataframe(df: pd.DataFrame, remove_duplicates: bool = True) -> pd.Data
     cleaned_df = df.copy()
 
     # Supprime les lignes entièrement vides
-    cleaned_df = cleaned_df.dropna(how='all')
+    cleaned_df = cleaned_df.dropna(how="all")
 
     # Supprime les colonnes entièrement vides
-    cleaned_df = cleaned_df.dropna(axis=1, how='all')
+    cleaned_df = cleaned_df.dropna(axis=1, how="all")
 
     # Supprime les doublons si demandé
     if remove_duplicates:
@@ -108,8 +108,7 @@ def clean_dataframe(df: pd.DataFrame, remove_duplicates: bool = True) -> pd.Data
     return cleaned_df
 
 
-def get_color_scale(value: float, min_val: float, max_val: float,
-                   colors: list[str] = None) -> str:
+def get_color_scale(value: float, min_val: float, max_val: float, colors: list[str] = None) -> str:
     """Retourne une couleur basée sur une échelle de valeurs"""
     if colors is None:
         colors = ["#ff4444", "#ffaa44", "#44ff44"]  # Rouge -> Orange -> Vert
@@ -126,8 +125,9 @@ def get_color_scale(value: float, min_val: float, max_val: float,
     return colors[color_index]
 
 
-def display_metric_card(title: str, value: Any, delta: float | None = None,
-                       format_func: callable = str):
+def display_metric_card(
+    title: str, value: Any, delta: float | None = None, format_func: callable = str
+):
     """Affiche une carte de métrique stylée"""
     formatted_value = format_func(value)
 
@@ -137,21 +137,17 @@ def display_metric_card(title: str, value: Any, delta: float | None = None,
         st.metric(
             label=title,
             value=formatted_value,
-            delta=f"{delta:+.1f}%" if delta is not None else None
+            delta=f"{delta:+.1f}%" if delta is not None else None,
         )
 
 
 def create_info_box(title: str, content: str, type: str = "info"):
     """Crée une boîte d'information colorée"""
-    icons = {
-        "info": "ℹ️",
-        "warning": "⚠️",
-        "error": "❌",
-        "success": "✅"
-    }
+    icons = {"info": "ℹ️", "warning": "⚠️", "error": "❌", "success": "✅"}
 
     icon = icons.get(type, "ℹ️")
-    st.markdown(f"""
+    st.markdown(
+        f"""
     <div style="
         padding: 1rem;
         border-left: 4px solid #007bff;
@@ -162,22 +158,22 @@ def create_info_box(title: str, content: str, type: str = "info"):
         <h4>{icon} {title}</h4>
         <p>{content}</p>
     </div>
-    """, unsafe_allow_html=True)
+    """,
+        unsafe_allow_html=True,
+    )
 
 
 def sidebar_spacer(height: int = 20):
     """Ajoute un espace vertical dans la sidebar"""
-    st.sidebar.markdown(f'<div style="height: {height}px;"></div>',
-                       unsafe_allow_html=True)
+    st.sidebar.markdown(f'<div style="height: {height}px;"></div>', unsafe_allow_html=True)
 
 
 def main_spacer(height: int = 20):
     """Ajoute un espace vertical dans le contenu principal"""
-    st.markdown(f'<div style="height: {height}px;"></div>',
-               unsafe_allow_html=True)
+    st.markdown(f'<div style="height: {height}px;"></div>', unsafe_allow_html=True)
 
 
 def json_pretty_print(data: dict[str, Any], max_height: int = 300):
     """Affiche du JSON de manière formatée"""
     json_str = json.dumps(data, indent=2, ensure_ascii=False)
-    st.code(json_str, language='json')
+    st.code(json_str, language="json")

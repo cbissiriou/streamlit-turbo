@@ -10,6 +10,7 @@ import streamlit as st
 
 class ValidationError(Exception):
     """Exception pour les erreurs de validation"""
+
     pass
 
 
@@ -51,7 +52,7 @@ class EmailValidator(Validator):
 
     def __init__(self):
         super().__init__("Format d'email invalide")
-        self.pattern = re.compile(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$')
+        self.pattern = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
 
     def validate(self, value: Any) -> bool:
         if not isinstance(value, str):
@@ -133,7 +134,7 @@ class FileExtensionValidator(Validator):
         super().__init__(f"Extensions autorisées: {', '.join(self.allowed_extensions)}")
 
     def validate(self, value: Any) -> bool:
-        if not hasattr(value, 'name'):
+        if not hasattr(value, "name"):
             return False
         filename = value.name.lower()
         return any(filename.endswith(ext) for ext in self.allowed_extensions)
@@ -142,11 +143,11 @@ class FileExtensionValidator(Validator):
 def validate_form_data(data: dict, validators: dict) -> dict:
     """
     Valide un dictionnaire de données avec des validateurs
-    
+
     Args:
         data: Dictionnaire des données à valider
         validators: Dictionnaire {champ: [liste_validateurs]}
-    
+
     Returns:
         Dict avec les erreurs par champ
     """
@@ -189,7 +190,7 @@ COMMON_VALIDATORS = {
     "long_text": LengthValidator(1, 1000),
     "positive_number": NumericRangeValidator(min_val=0),
     "percentage": NumericRangeValidator(0, 100),
-    "phone": RegexValidator(r'^\+?[\d\s\-\(\)]+$', "Format de téléphone invalide"),
-    "csv_file": FileExtensionValidator(['.csv']),
-    "image_file": FileExtensionValidator(['.jpg', '.jpeg', '.png', '.gif'])
+    "phone": RegexValidator(r"^\+?[\d\s\-\(\)]+$", "Format de téléphone invalide"),
+    "csv_file": FileExtensionValidator([".csv"]),
+    "image_file": FileExtensionValidator([".jpg", ".jpeg", ".png", ".gif"]),
 }

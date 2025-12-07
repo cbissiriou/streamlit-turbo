@@ -68,11 +68,9 @@ def set_current_page(page_name: str):
 def add_notification(message: str, type: str = "info"):
     """Ajoute une notification"""
     state = get_state()
-    state.notifications.append({
-        "message": message,
-        "type": type,
-        "timestamp": st.session_state.get("timestamp", 0)
-    })
+    state.notifications.append(
+        {"message": message, "type": type, "timestamp": st.session_state.get("timestamp", 0)}
+    )
 
 
 def clear_notifications():

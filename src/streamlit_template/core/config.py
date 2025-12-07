@@ -47,7 +47,7 @@ class AppConfig:
             database_url=os.getenv("DATABASE_URL"),
             debug_mode=os.getenv("DEBUG", "false").lower() == "true",
             log_level=os.getenv("LOG_LEVEL", cls.log_level),
-            theme_mode=os.getenv("THEME_MODE", cls.theme_mode)
+            theme_mode=os.getenv("THEME_MODE", cls.theme_mode),
         )
 
 
